@@ -1,0 +1,164 @@
+// MAZE WALL DETECTION
+Sprite player = new Sprite(50, 50, 50, 50);
+Sprite exit = new Sprite(575, 50, 30, 30);
+boolean up, down, left, right;
+ArrayList<Sprite> walls = new ArrayList<>();
+
+void setup(){
+    size(800, 800);
+    player.setColor(255, 255, 255);
+    exit.setColor(0, 255, 0);
+    //makeWall(4, 4, 30, 400);
+    makeWall(3, 3, 600, 30);
+    makeWall(1, 1, 30, 200);
+    makeWall(2, 2, 30, 200);
+    makeWall(3, 1, 30, 200);
+    makeWall(4, 2, 30, 200);
+    makeWall(5, 1, 30, 200);
+    makeWall(6, 2, 225, 30);
+    makeWall(7, 4, 30, 400);
+    makeWall(1, 5, 30, 200);
+    makeWall(2, 4, 30, 200);
+    makeWall(3, 5, 30, 200);
+    makeWall(4, 4, 30, 200);
+    makeWall(5, 5, 30, 200);
+    makeWall(4, 6, 600, 30);
+    makeWall(1, 7, 30, 80);
+    makeWall(2, 8, 30, 200);
+    makeWall(3, 7, 30, 80);
+    makeWall(4, 8, 30, 200);
+    makeWall(5, 7, 30, 80);
+}
+
+void draw(){
+    background(0);
+    wallsBeWalls();
+    playerControls();
+    exitControls();
+}
+
+void playerControls(){
+    player.display();
+    if(up){
+        player.moveY(-5);
+    }
+    if(down){
+        player.moveY(5);
+    }
+    if(left){
+        player.moveX(-5);
+    }
+    if(right){
+        player.moveX(5);
+    }
+    if(player.getX() > width - player.getW()/2){
+        player.setX(width - player.getW()/2);
+    }
+    if(player.getX() <  player.getW()/2){
+        player.setX(player.getW()/2);
+    }
+    if(player.getY() > height - player.getH()/2){
+        player.setY(height - player.getH()/2);
+    }
+    if(player.getY() < player.getH()/2){
+        player.setY(player.getH()/2);
+    }
+}
+
+void exitControls(){
+    exit.display();
+    if(player.touchingSprite(exit)){
+        player.moveToPoint(50, 50);
+        exit.moveToPoint(random(width), random(height));
+    }
+}
+
+void wallsBeWalls(){
+    for(Sprite w : walls){
+        w.display();
+        if(touchingLeft(w)){
+            right = false;
+        }
+        if(touchingRight(w)){
+            left = false;
+        }
+        if(touchingTop(w)){
+            down = false;
+        }
+        if(touchingBottom(w)){
+            up = false;
+        }
+    }
+}
+
+void makeWall(int c, int r, int w, int h){
+    Sprite a = new Sprite(c*100, r*100, w, h);
+    a.setColor(0,255, 255);
+    walls.add(a);
+}
+
+boolean touchingLeft(Sprite wall){
+    if((player.getX() == wall.getX()-player.getW()/2-wall.getW()/2) 
+    && (player.getY() > wall.getY() - wall.getH()/2 - player.getH()/2)
+    && (player.getY() < wall.getY() + wall.getH()/2 + player.getH()/2)){
+        return true;
+    }
+    return false;
+}
+
+boolean touchingRight(Sprite wall){
+    if((player.getX() == wall.getX()+player.getW()/2+wall.getW()/2) 
+    && (player.getY() > wall.getY() - wall.getH()/2 - player.getH()/2)
+    && (player.getY() < wall.getY() + wall.getH()/2 + player.getH()/2)){
+        return true;
+    }
+    return false;
+}
+
+boolean touchingTop(Sprite wall){
+    if((player.getY() == wall.getY()-player.getH()/2-wall.getH()/2) 
+    && (player.getX() > wall.getX() - wall.getW()/2 - player.getW()/2)
+    && (player.getX() < wall.getX() + wall.getW()/2 + player.getW()/2)){
+        return true;
+    }
+    return false;
+}
+
+boolean touchingBottom(Sprite wall){
+    if((player.getY() == wall.getY()+player.getH()/2+wall.getH()/2) 
+    && (player.getX() > wall.getX() - wall.getW()/2 - player.getW()/2)
+    && (player.getX() < wall.getX() + wall.getW()/2 + player.getW()/2)){
+        return true;
+    }
+    return false;
+}
+
+void keyPressed(){
+    if(keyCode == UP){
+        up = true;
+    }
+    if(keyCode == DOWN){
+        down = true;
+    }
+    if(keyCode == LEFT){
+        left = true;
+    }
+    if(keyCode == RIGHT){
+        right = true;
+    }
+}
+
+void keyReleased(){
+    if(keyCode == UP){
+        up = false;
+    }
+    if(keyCode == DOWN){
+        down = false;
+    }
+    if(keyCode == LEFT){
+        left = false;
+    }
+    if(keyCode == RIGHT){
+        right = false;
+    }
+}
