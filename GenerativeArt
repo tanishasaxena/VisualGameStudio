@@ -1,0 +1,32 @@
+
+Sprite star = new Sprite(400, 400, 50, 50);
+int h = 0;
+
+void setup(){
+    size(800, 800);
+    colorMode(HSB);
+    star.setColor(255, 255, 255);
+    star.turnToDir(random(0, 360));
+    background(0);
+}
+
+void draw(){
+    star.forward(30);
+    noStroke();
+    fill(h, 255, 255, 50);
+    ellipse(star.getX(), star.getY(), 50, 50);
+    if(star.getY() > 775 || star.getY() < 25){
+        star.flipY();
+    }
+    if(star.getX() > 775 || star.getX() < 25){
+        star.flipX();
+    }
+    h=(h+5)%255;
+    
+}
+
+void keyPressed(){
+    if(key == 'r'){
+        star.turnToDir(random(0, 360));
+    }
+}
