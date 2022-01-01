@@ -1,0 +1,129 @@
+Ball player = new Ball(800, 700);
+
+
+void setup(){
+    size(1000, 800);
+    colorMode(HSB, 360, 90, 90);
+}
+
+
+void draw(){
+    println("running");
+    background(182, 87, 44);
+    //println("running");
+    if(player.dir.mag() == 0.0){
+        drawPower();
+    }
+    
+    ballControls();
+    
+}
+
+void ballControls(){
+    fill(255);
+    ellipse(player.getX(), player.getY(), 50, 50);
+    // making it move
+    player.move();
+    if(player.dir.mag() > 0.0){
+        player.dir.mult(0.9);
+    }
+    if(player.dir.mag() < 1.0){
+        player.dir.set(0, 0);
+    }
+    // makes ball bounce off top, bottom, left, right
+    bounceOffWalls();
+    
+}
+
+void bounceOffWalls(){
+    // left wall
+    if(player.getX() < 0 || player.getX() > width){
+        player.dir.set(-1 * player.dir.x, player.dir.y);
+    }
+    
+    // top wall
+    if(player.getY() < 0 || player.getY() > height){
+        player.dir.set(player.dir.x, -1 * player.dir.y);
+    }
+}
+
+void mousePressed(){
+    
+    PVector mouseVect = new PVector(mouseX-player.getX(), mouseY-player.getY());
+    
+    
+    /*
+    m = (mou.y-p.y) / (mou.x-p.x);
+    b = p.y - (p.x * m);
+    
+    if(mou.x > p.x){
+        float temp = (-100 * m) + b;
+        dir.x = -100;
+        dir.y = temp;
+    }
+    else{
+        float temp = (1100 * m) + b;
+        dir.x = 1100;
+        dir.y = temp;
+    }
+    
+    ball.turnToPoint(dir.x, dir.y);
+    
+    ballSpeed = dist(mou.x, mou.y, p.x, p.y) / 10;
+    */
+}
+
+class Ball {
+    Point p;
+    float speed;
+    PVector dir;
+    
+    Ball(float x, float y){
+        p.x = x;
+        p.y = y;
+        speed = 0;
+        dir = new PVector(0, 0);
+    }
+    
+    float getX(){
+        return p.x;
+    }
+    float getY(){
+        return p.y;
+    }
+    void move(){
+        p.x += dir.x;
+        p.y += dir.y;
+    }
+}
+
+class Point {
+    float x;
+    float y;
+    
+    Point(float xx, float yy){
+        x = xx;
+        y = yy;
+    }
+}
+
+// draw line to indicate power of hit
+void drawPower(){
+    float power = dist(mouseX, mouseY, player.getX(), player.getY()) / 10;
+    
+    if(power < 20){
+        stroke(59, 60, 70);
+    }
+    else if (power < 40){
+        stroke(42, 62, 68);
+    }
+    else if (power < 60){
+        stroke(12, 66, 66);
+    }
+    else {
+        stroke(0, 70, 59);
+    }
+    strokeWeight(15);
+    line(mouseX, mouseY, player.getX(), player.getY());
+    
+}
