@@ -1,0 +1,205 @@
+SoundCipher sc = new SoundCipher(this);
+Sprite white1 = new Sprite(170, 240, 45, 150);
+Sprite black1 = new Sprite(195, 215, 25, 100);
+Sprite white2 = new Sprite(220, 240, 45, 150);
+Sprite black2 = new Sprite(245, 215, 25, 100);
+Sprite white3 = new Sprite(270, 240, 45, 150);
+Sprite white4 = new Sprite(320, 240, 45, 150);
+Sprite black3 = new Sprite(345, 215, 25, 100);
+Sprite white5 = new Sprite(370, 240, 45, 150);
+Sprite black4 = new Sprite(395, 215, 25, 100);
+Sprite white6 = new Sprite(420, 240, 45, 150);
+Sprite black5 = new Sprite(445, 215, 25, 100);
+Sprite white7 = new Sprite(470, 240, 45, 150);
+ArrayList<Sprite> keys = (new ArrayList());
+ArrayList<Integer> furElise = (new ArrayList());
+Integer nTimer = 60; 
+Integer sIndex = 0; 
+Integer octave = 0; 
+
+
+
+void draw() {
+  if (nTimer < 1) {
+    sc.playNote(furElise.get(sIndex), 100, .5);
+    nTimer = 30;
+    sIndex = sIndex+1;
+  }
+  nTimer = nTimer-1; 
+  white1.display(); 
+  white2.display(); 
+  white3.display(); 
+  white4.display();
+  white5.display();
+  white6.display();
+  white7.display(); 
+  black1.display();
+  black2.display();
+  black3.display();
+  black4.display();
+  black5.display();
+}
+
+
+void keyPressed() {
+  if (pressed("a")) {
+    sc.playNote(60+(octave*12), 100, 0.5);
+    white1.setColor(255, 0, 0);
+    text("C", 320, 100);
+  }
+  if (pressed("w")) {
+    sc.playNote(61+(octave*12), 100, 0.5);
+    black1.setColor(255, 0, 0);
+    text("C#", 320, 100);
+  }
+  if (pressed("s")) {
+    sc.playNote(62+(octave*12), 100, 0.5);
+    white2.setColor(255, 0, 0);
+    text("D", 320, 100); 
+  }
+  if (pressed("e")) {
+    sc.playNote(63+(octave*12), 100, 0.5);
+    black2.setColor(255, 0, 0);
+    text("D#", 320, 100); 
+  }
+  if (pressed("d")) {
+    sc.playNote(64+(octave*12), 100, 0.5);
+    white3.setColor(255, 0, 0);
+    text("E", 320, 100); 
+  }
+  if (pressed("f")) {
+    sc.playNote(65+(octave*12), 100, 0.5);
+    white4.setColor(255, 0, 0);
+    text("F", 320, 100);
+  }
+  if (pressed("t")) {
+    sc.playNote(66+(octave*12), 100, 0.5);
+    black3.setColor(255, 0, 0);
+    text("F#", 320, 100);
+  }
+  if (pressed("g")) {
+    sc.playNote(67+(octave*12), 100, 0.5);
+    white5.setColor(255, 0, 0);
+    text("G", 320, 100);
+  }
+  if (pressed("y")) {
+    sc.playNote(68+(octave*12), 100, 0.5);
+    black4.setColor(255, 0, 0);
+    text("G#", 320, 100);
+  }
+  if (pressed("h")) {
+    sc.playNote(69+(octave*12), 100, 0.5);
+    white6.setColor(255, 0, 0);
+    text("A", 320, 100); 
+  }
+  if (pressed("u")) {
+    sc.playNote(70+(octave*12), 100, 0.5);
+    black5.setColor(255, 0, 0);
+    text("A#", 320, 100); 
+  }
+  if (pressed("j")) {
+    sc.playNote(71+(octave*12), 100, 0.5);
+    white7.setColor(255, 0, 0);
+    text("B", 320, 100);
+  }
+  if (pressed("UP")) {
+    octave = octave+1;
+  }
+  if (pressed("DOWN")) {
+    octave = octave-1;
+  }
+}
+
+
+void mousePressed() {
+  if (black1.touchingPoint(mouseX, mouseY)) {
+    sc.playNote(61+(octave*12), 100, 0.5);
+    text("C#", 320, 100); // display "C#" at (320, 100)
+  } else if (black2.touchingPoint(mouseX, mouseY)) {
+    sc.playNote(63+(octave*12), 100, 0.5);
+    text("D#", 320, 100); // display "D#" at (320, 100)
+  } else if (black3.touchingPoint(mouseX, mouseY)) {
+    sc.playNote(66+(octave*12), 100, 0.5);
+    text("F#", 320, 100); // display "F#" at (320, 100)
+  } else if (black4.touchingPoint(mouseX, mouseY)) {
+    sc.playNote(68+(octave*12), 100, 0.5);
+    text("G#", 320, 100); // display "G#" at (320, 100)
+  } else if (black5.touchingPoint(mouseX, mouseY)) {
+    sc.playNote(70+(octave*12), 100, 0.5);
+    text("A#", 320, 100); // display "A#" at (320, 100)
+  } else if (white1.touchingPoint(mouseX, mouseY)) {
+    sc.playNote(60+(octave*12), 100, 0.5);
+    text("C", 320, 100); // display "C" at (320, 100)
+  } else if (white2.touchingPoint(mouseX, mouseY)) {
+    sc.playNote(62+(octave*12), 100, 0.5);
+    text("D", 320, 100); // display "D" at (320, 100)
+  } else if (white3.touchingPoint(mouseX, mouseY)) {
+    sc.playNote(64+(octave*12), 100, 0.5);
+    text("E", 320, 100); // display "E" at (320, 100)
+  } else if (white4.touchingPoint(mouseX, mouseY)) {
+    sc.playNote(65+(octave*12), 100, 0.5);
+    text("F", 320, 100); // display "F" at (320, 100)
+  } else if (white5.touchingPoint(mouseX, mouseY)) {
+    sc.playNote(67+(octave*12), 100, 0.5);
+    text("G", 320, 100); // display "G" at (320, 100)
+  } else if (white6.touchingPoint(mouseX, mouseY)) {
+    sc.playNote(69+(octave*12), 100, 0.5);
+    text("A", 320, 100); // display "A" at (320, 100)
+  } else if (white7.touchingPoint(mouseX, mouseY)) {
+    sc.playNote(71+(octave*12), 100, 0.5);
+    text("B", 320, 100); // display "B" at (320, 100)
+  }
+  for( Sprite key : keys) {
+    if (key.touchingPoint(mouseX, mouseY)) {
+      key.setColor(255, 0, 0);
+    }
+  }
+  
+}
+
+
+void resetColors() {
+  white1.setColor(255, 255, 255);
+  black1.setColor(0, 0, 0);
+  white2.setColor(255, 255, 255);
+  black2.setColor(0, 0, 0);
+  white3.setColor(255, 255, 255);
+  black3.setColor(0, 0, 0);
+  white4.setColor(255, 255, 255);
+  black4.setColor(0, 0, 0);
+  white5.setColor(255, 255, 255);
+  black5.setColor(0, 0, 0);
+  white6.setColor(255, 255, 255);
+  white7.setColor(255, 255, 255);
+}
+
+
+void setup() {
+  background(25, 135, 220);
+  resetColors();
+  keys.add(white1);
+  keys.add(black1);
+  keys.add(white2);
+  keys.add(black2);
+  keys.add(white3);
+  keys.add(black3);
+  keys.add(white4);
+  keys.add(black4);
+  keys.add(white5);
+  keys.add(black5);
+  keys.add(white6);
+  keys.add(white7);
+}
+
+
+void mouseReleased() {
+  resetColors();
+  background(25, 135, 220);
+}
+
+
+void keyReleased() {
+  resetColors();
+  background(25, 135, 220);
+}
+
