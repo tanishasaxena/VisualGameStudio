@@ -1,0 +1,30 @@
+
+float dark = 0;
+int planeX = 900;
+
+void setup(){
+    size(1000, 800);
+}
+
+void draw(){
+    background(111+dark, 212+dark, 242+dark);
+    dark = -mouseY/3;
+    fill(150, 150, 150);
+    ellipse(850, 800-mouseY, 200, 200); // moon
+    fill(255, 221, 0);
+    ellipse(150, mouseY, 200, 200); // sun
+    
+    fill(200+(dark/1.5), 200+(dark/1.5), 200+(dark/1.5));
+    stroke(255, 255, 255);
+    strokeWeight(6);
+    triangle(0, 800, 600, 800, 300, 500);  // left mountain
+    triangle(400, 800, 1000, 800, 700, 600); // right mountain
+    
+    fill(50);
+    noStroke();
+    rect(planeX, 100, 50, 15);
+    planeX = planeX + 1;
+    if(planeX > 1000){
+        planeX = -50;
+    }
+}
