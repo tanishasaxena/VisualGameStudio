@@ -1,0 +1,173 @@
+
+String cannonUrl = "https://www.inboundstraining.com/wp-content/uploads/2019/04/NerfGun-1024x767.png";
+Sprite player = new Sprite(cannonUrl, 400, 400, 150, 150);
+ArrayList<Sprite> shots = (new ArrayList());
+Boolean shooting = false;
+Integer shotTimer = 5;
+ArrayList<Sprite> walls = (new ArrayList());
+Boolean up = false;
+Boolean down = false;
+Boolean left = false;
+Boolean right = false;
+Boolean touchingWall = false;
+
+
+
+void setup() {
+  size(800, 800);
+  String wallUrl = "https://media.istockphoto.com/photos/high-res-wooden-texture-background-picture-id509055470?k=6&m=509055470&s=612x612&w=0&h=wYebuh_XFD3i_j4v519v-w-sUYSJccK8MGscPJHHjK8=";
+  Sprite leftWall = new Sprite(wallUrl, 10, 400, 20, 800);
+  Sprite rightWall = new Sprite(wallUrl, 790, 400, 20, 800);
+  Sprite topWall = new Sprite(wallUrl, 400, 10, 800, 20);
+  Sprite bottomWall = new Sprite(wallUrl, 400, 790, 800, 20);
+  walls.add(leftWall);
+  walls.add(rightWall);
+  walls.add(topWall);
+  walls.add(bottomWall);
+  player.resetRoundHitbox();
+}
+
+
+void wallControls() {
+  touchingWall = false;
+  for( Sprite w : walls) {
+    w.display();
+    if (up) {
+      w.moveY(5);
+    }
+    if (down) {
+      w.moveY(-5);
+    }
+    if (left) {
+      w.moveX(5);
+    }
+    if (right) {
+      w.moveX(-5);
+    }
+    if (player.touchingSprite(w)) {
+      touchingWall = true;
+    }
+  }
+  
+  if (touchingWall) {
+    for( Sprite w : walls) {
+      if (up) {
+        w.moveY(-5);
+      }
+      if (down) {
+        w.moveY(5);
+      }
+      if (left) {
+        w.moveX(-5);
+      }
+      if (right) {
+        w.moveX(5);
+      }
+    }
+    
+  }
+}
+
+void keyReleased() {
+  if (key == 'w') {
+    up = false;
+  }
+  if (key == 's') {
+    down = false;
+  }
+  if (key == 'a') {
+    left = false;
+  }
+  if (key == 'd') {
+    right = false;
+  }
+}
+
+
+void keyPressed() {
+  if (pressed("w")) {
+    up = true;
+  }
+  if (pressed("s")) {
+    down = true;
+  }
+  if (pressed("a")) {
+    left = true;
+  }
+  if (pressed("d")) {
+    right = true;
+  }
+}
+
+
+void shotControls() {
+  for( Sprite s : shots) {
+    s.display();
+    s.forward(4);
+    if (up) {
+      s.moveY(5);
+    }
+    if (down) {
+      s.moveY(-5);
+    }
+    if (left) {
+      s.moveX(5);
+    }
+    if (right) {
+      s.moveX(-5);
+    }
+  }
+  
+  if (touchingWall) {
+    for( Sprite s : shots) {
+      if (up) {
+        s.moveY(-5);
+      }
+      if (down) {
+        s.moveY(5);
+      }
+      if (left) {
+        s.moveX(-5);
+      }
+      if (right) {
+        s.moveX(5);
+      }
+    }
+    
+  }
+  if (shooting == true && shotTimer == 5) {
+    String bulletUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Button_Icon_White.svg/1024px-Button_Icon_White.svg.png";
+    Sprite bullet = new Sprite(bulletUrl, 400, 400, 15, 15);
+    bullet.turnToPoint(mouseX, mouseY);
+    shots.add(bullet);
+  }
+  shotTimer = shotTimer-1;
+  if (shotTimer == 0) {
+    shotTimer = 5;
+  }
+}
+
+
+
+void mouseReleased() {
+  shooting = false;
+}
+
+
+void mousePressed() {
+  shooting = true;
+  shotTimer = 5;
+}
+
+void playerControls() {
+  player.display();
+  player.turnToPoint(mouseX, mouseY);
+}
+
+
+void draw() {
+  background(0, 0, 0);
+  shotControls();
+  playerControls();
+  wallControls();
+}
