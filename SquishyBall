@@ -1,0 +1,50 @@
+
+float grav = 0.0;
+float vel = 0.5;
+float bounce = 15;
+
+
+float squish = 0.1;
+float sizeY = 50;
+float sizeX = 50;
+float y = 150;
+
+
+boolean hitBottom = false;
+
+void setup(){
+    size(400, 400);
+}
+
+void draw(){
+    
+    background(250, 235, 207);
+    
+    fill(3, 0, 87);
+    noStroke();
+    ellipse(200, y, sizeX, sizeY);
+    
+    y+=grav;
+    grav+=vel;
+    
+    
+    if(y >= height-sizeY/2) hitBottom = true;
+    else hitBottom = false;
+    
+    if(hitBottom){
+        grav = 0.0;
+        //sizeY = 50;
+        y = height-sizeY/2;
+        grav-=bounce;
+        bounce = bounce/1.2;
+        
+    }
+    
+    if(bounce < 5 && bounce > 0.7){
+        sizeY -= 0.1;
+        sizeX += 0.1;
+    }
+    
+    sizeY+=grav/20;
+    sizeX-=grav/20;
+}
