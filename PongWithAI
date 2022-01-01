@@ -1,0 +1,257 @@
+/** POSITION: 0;0 */
+// global variables
+Sprite rightPaddle = new Sprite(600, 240, 25, 150);
+Sprite leftPaddle = new Sprite(40, 240, 25, 150);
+Sprite puck = new Sprite(320, 240, 15, 15);
+Integer rightScore = 0;
+Integer leftScore = 0; 
+Sprite singleEasyButton = new Sprite(320, 100, 100, 50);
+Sprite singleHardButton = new Sprite(320, 175, 100, 50);
+Sprite multiplayerButton = new Sprite(320, 250, 100, 50);
+Integer level = 0;
+SoundCipher sc = new SoundCipher(this);
+Integer timer = 0;
+Integer speedTimer = 0;
+
+
+
+void draw() {
+  speedTimer = speedTimer + 1;
+  if (leftScore > 3) {
+    if (timer < 60) {
+      winningScreen("left");
+    } else {
+      level = 0;
+      leftScore = 0;
+      rightScore = 0;
+      timer = 0;
+      speedTimer = 0;
+    }
+  } else if (rightScore > 3) {
+    if (timer < 60) {
+      winningScreen("right");
+    } else {
+      level = 0;
+      leftScore = 0;
+      rightScore = 0;
+      timer = 0;
+      speedTimer = 0;
+    }
+  } else {
+    if (level == 0) {
+      homeScreen();
+    } else if (level == 1) {
+      singlePlayerEasy();
+    } else if (level == 2) {
+      singlePlayerHard();
+    } else if (level == 3) {
+      multiplayer();
+    }
+  }
+}
+
+
+void homeScreen() {
+  background(0, 0, 0);
+  fill(255, 255, 255);
+  text("Choose A Version :D", 250, 40);
+  singleEasyButton.setColor(0, 255, 0);
+  singleHardButton.setColor(255, 0, 0);
+  multiplayerButton.setColor(0, 0, 255);
+  singleEasyButton.display();
+  singleHardButton.display();
+  multiplayerButton.display();
+  textSize(16);
+  fill(0, 0, 0);
+  text("Press One!", 320, 100);
+  text("Press Two!", 320, 175);
+  text("Press Three!", 320, 250);
+}
+
+
+void winningScreen(String winner) {
+  fill(185, 66, 244);
+  text(winner + " has won!", 320, 240);
+  timer = timer + 1;
+}
+
+
+void singlePlayerEasy() {
+  background(255, 255, 255);
+  rightPaddleControls();
+  leftPaddleAI2();
+  puckControl();
+  displayScore();
+  if (puck.getX() > 640) {
+    resetPuck();
+    leftScore = leftScore + 1;
+  }
+  if (puck.getX() < 0) {
+    resetPuck();
+    rightScore = rightScore + 1;
+  }
+}
+
+
+void singlePlayerHard() {
+  background(255, 255, 255);
+  rightPaddleControls();
+  leftPaddleAI();
+  puckControl();
+  displayScore();
+  if (puck.getX() > 640) {
+    resetPuck();
+    leftScore = leftScore + 1;
+  }
+  if (puck.getX() < 0) {
+    resetPuck();
+    rightScore = rightScore + 1;
+  }
+}
+
+
+void multiplayer() {
+  background(255, 255, 255);
+  rightPaddleControls();
+  leftPaddleControls();
+  puckControl();
+  displayScore();
+  if (puck.getX() > 640) {
+    resetPuck();
+    leftScore = leftScore + 1;
+  }
+  if (puck.getX() < 0) {
+    resetPuck();
+    rightScore = rightScore + 1;
+  }
+}
+
+
+void displayScore() {
+  textSize(30);
+  fill(244, 66, 137);
+  text(rightScore, 600, 30);
+  text(leftScore, 40, 30);
+}
+
+
+void puckControl() {
+  puck.display();
+  puck.forward(5 + (int)(speedTimer/600));
+  Integer x = int(random(60, 80));
+  if (leftPaddle.touchingSprite(puck)) {
+    puck.flipX();
+    puck.moveX(10);
+    sc.playNote(x, 100, 0.01);
+  }
+  if (rightPaddle.touchingSprite(puck)) {
+    puck.flipX();
+    puck.moveX(-10);
+    sc.playNote(x, 100, 0.01);
+  }
+  if (puck.getY() < 0) {
+    puck.flipY();
+    sc.playNote(x, 100, 0.01);
+  }
+  if (puck.getY() > 480) {
+    puck.flipY();
+    sc.playNote(x, 100, 0.01);
+  }
+}
+
+
+void rightPaddleControls() {
+  rightPaddle.display();  
+  if (pressed("UP")) {
+    rightPaddle.moveY(-8);
+  }
+  if (pressed("DOWN")) {
+    rightPaddle.moveY(8);
+  }
+  if (rightPaddle.getY() < 75) {
+    rightPaddle.setY(75);
+  }
+  if (rightPaddle.getY() > 405) {
+    rightPaddle.setY(405);
+  }
+}
+
+
+void leftPaddleControls() {
+  leftPaddle.display();
+  if (pressed("w")) {
+    leftPaddle.moveY(-8);
+  }
+  if (pressed("s")) {
+    leftPaddle.moveY(8);
+  }
+  if (leftPaddle.getY() < 75) {
+    leftPaddle.setY(75);
+  }
+  if (leftPaddle.getY() > 405) {
+    leftPaddle.setY(405);
+  }
+}
+
+void leftPaddleAI() {
+  leftPaddle.display();
+  leftPaddle.setY(puck.getY());
+}
+
+
+void leftPaddleAI2() {
+  leftPaddle.display();
+  if (leftPaddle.getY() < puck.getY()) {
+    leftPaddle.moveY(1);
+  }
+  if (leftPaddle.getY() > puck.getY()) {
+    leftPaddle.moveY(-1);
+  }
+}
+
+
+void resetPuck() {
+  puck.moveToPoint(320, 240);
+  puck.turnToDir((random(10, 65)));
+  if (random(0, 2) < 1) {
+    puck.flipX();
+  }
+  if (random(0, 2) < 1) {
+    puck.flipY();
+  }
+}
+
+
+void mousePressed() {
+  if (singleEasyButton.touchingPoint(mouseX, mouseY)) {
+    level = 1;
+    rightPaddle.setY(240);
+    leftPaddle.setY(240);
+  } else if (singleHardButton.touchingPoint(mouseX, mouseY)) {
+    level = 2;
+    rightPaddle.setY(240);
+    leftPaddle.setY(240);
+  } else if (multiplayerButton.touchingPoint(mouseX, mouseY)) {
+    level = 3;
+    rightPaddle.setY(240);
+    leftPaddle.setY(240);
+  }
+}
+
+
+void keyPressed() {
+  if (pressed("1")) {
+    level = 1;
+    rightPaddle.setY(240);
+    leftPaddle.setY(240);
+  } else if (pressed("2")) {
+    level = 2;
+    rightPaddle.setY(240);
+    leftPaddle.setY(240);
+  } else if (pressed("3")) {
+    level = 3;
+    rightPaddle.setY(240);
+    leftPaddle.setY(240);
+  }
+}
+
