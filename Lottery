@@ -1,0 +1,53 @@
+
+String url = "https://geraniumodorant.com/wp-content/uploads/2016/04/scents-roses.png";
+Sprite s = new Sprite(url, 320, 240, 50, 50);
+Boolean turnClockwise = true;
+
+
+
+void draw() {
+  fill(0, 0, 0, 20);
+  rect(320, 240, 640, 480);
+  
+  
+  fill(255, 0, 0, 20);
+  rect(480, 360, 320, 240);
+  
+  
+  fill(0, 255, 0, 20);
+  rect(160, 360, 320, 240);
+  
+  
+  fill(0, 0, 255, 20);
+  rect(480, 120, 320, 240);
+  
+  
+  fill(255, 255, 0, 20);
+  rect(160, 120, 320, 240);
+  
+  
+  fill(255, 255, 255, 20);
+  rect(320, 120, 20, 240);
+  
+  
+  s.moveToPoint(320, 240);
+  s.forward(200);
+  s.display();
+  if (turnClockwise == true) {
+    s.turn(23);
+  } else {
+    if (s.touchingPoint(320, 40)) {
+      println("you win!");
+    }
+    if (s.getX() < 320) {
+      println("+1");
+    } else {
+      println("-1");
+    }
+  }
+}
+
+
+void mousePressed() {
+  turnClockwise = !turnClockwise;
+}
