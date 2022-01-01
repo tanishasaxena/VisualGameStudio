@@ -1,0 +1,41 @@
+
+Float planeX = -100.0;
+
+
+
+void draw() {
+  background(180-mouseY/2.5, 180-mouseY/2.5, 255-mouseY/2.5);
+  noStroke();
+  fill(182, 196, 216);
+  triangle(320, 20, 100, 480, 540, 480);
+  fill(102, 116, 136);
+  triangle(540, 480, 320, 20, 590, 480);
+  fill(240, 240, 0);
+  ellipse(100, mouseY, 100, 100);
+  fill(190, 190, 190);
+  ellipse(540, 480-mouseY, 100, 100);
+  fill(0, 80-mouseY/3, 0);
+  ellipse(100, 480, 230, 200);
+  fill(0, 120-mouseY/2.5, 0);
+  ellipse(250, 480, 300, 270);
+  fill(0, 160-mouseY/2.5, 0);
+  ellipse(380, 450, 480, 100);
+  fill(0, 210-mouseY/2.5, 0);
+  ellipse(500, 450, 100, 100);
+  fill(0, 255-mouseY/2.5, 0);
+  ellipse(600, 460, 170, 200);
+  fill(220, 220, 220);
+  rect(320, 480, 640, 50);
+  
+  
+  fill(220, 220, 220, 190);
+  ellipse(80+mouseY, 120, 170, 30);
+  fill(130, 130, 130);
+  rect(planeX, 50, 20, 4);
+  
+  
+  planeX = planeX + 1;
+  planeX = planeX % 650;
+  showCoor();
+}
+
