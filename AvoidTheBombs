@@ -1,0 +1,202 @@
+
+Sprite catcher1 = new Sprite(100, 700, 75, 125); 
+Sprite catcher2 = new Sprite(200, 700, 75, 125); 
+Sprite catcher3 = new Sprite(300, 700, 75, 125);
+Integer score = 0;
+Integer bombCounter = 0;
+Integer speed = 45;
+ArrayList<Sprite> catchers = (new ArrayList()); 
+ArrayList<Boolean> open = (new ArrayList());
+ArrayList<Sprite> goodFalling = (new ArrayList());
+ArrayList<Sprite> badFalling = (new ArrayList());
+Integer stage = 1;
+Sprite startButton = new Sprite(200, 380, 100, 50);
+
+
+void draw() {
+  if (stage == 0) {
+    game();
+  } else if (stage == 1) {
+    startScreen();
+  } else if (stage == 2) {
+    endScreen();
+  }
+}
+
+void endScreen() {
+  background(25, 25, 25);
+  startButton.setColor(255, 255, 255);
+  startButton.display();
+  textSize(20);
+  fill(0, 0, 0);
+  text("Try Again", startButton.getX(), startButton.getY());
+  fill(255, 255, 255);
+  textSize(30);
+  text("Your Score was: " + (score+20), 200, 440);
+  text("You ate too many bombs", 200, 320);
+}
+
+
+void scoreControls() {
+  textSize(30);
+  text(score, 42, 20);
+  text("score", 42, 50);
+  text(bombCounter, 300, 20);
+  text("bombs eaten", 300, 50);
+  for( Sprite f : goodFalling) {
+    for(Integer i = 0;(i < catchers.size());i = i + 1) {
+      if (catchers.get(i).touchingSprite(f)) {
+        goodFalling.remove(f);
+        if (open.get(i) == true) {
+          score = score+10;
+        } else {
+          score = score-20;
+        }
+      }
+    }
+    
+  }
+  
+  for( Sprite f : badFalling) {
+    for(Integer i = 0;(i < catchers.size());i = i + 1) {
+      if (catchers.get(i).touchingSprite(f)) {
+        badFalling.remove(f);
+        if (open.get(i) == false) {
+          score = score+10;
+        } else {
+          score = score-20;
+          bombCounter = bombCounter+1;
+        }
+      }
+    }
+    
+  }
+  
+}
+
+
+void catcherColorControls() {
+  for( Sprite c : catchers) {
+    c.display();
+  }
+  
+  Integer i = 0;
+  for( Sprite c : catchers) {
+    if (open.get(i) == false) {
+      c.setColor(255, 0, 0);
+    } else {
+      c.setColor(199, 240, 252);
+    }
+    i = i+1;
+  }
+  
+}
+
+
+void badFallingControls() {
+  for( Sprite f : badFalling) {
+    f.display();
+    f.moveY(5);
+    f.turn(1);
+  }
+  
+}
+
+
+void addToGood() {
+  Integer r = int(random(1, 4));
+  Sprite s = new Sprite(r*100, -100, 20, 20);
+  s.setColor(255, 255, 255);
+  goodFalling.add(s);
+}
+
+
+void goodFallingControls() {
+  for( Sprite f : goodFalling) {
+    f.display();
+    f.moveY(5);
+    f.turn(1);
+  }
+  
+}
+
+
+void setup() {
+  size(400, 800);
+  catchers.add(catcher1);
+  catchers.add(catcher2);
+  catchers.add(catcher3);
+  while((open.size() < catchers.size())) {
+    Boolean b = true;
+    open.add(b);
+  }
+  
+}
+
+
+void game() {
+  background(0, 0, 0);
+  goodFallingControls();
+  catcherColorControls();
+  scoreControls();
+  badFallingControls();
+  if (frameCount%speed == 0) {
+    if (random(0, 1) < 0.23) {
+      addToBad();
+    } else {
+      addToGood();
+    }
+  }
+  if (frameCount%300 == 0 && speed > 8) {
+    speed = speed-1;
+  }
+  if (bombCounter >= 10) {
+    stage = 2;
+  }
+}
+
+
+void addToBad() {
+  Integer r = int(random(1, 4));
+  Sprite s = new Sprite(r*100, -100, 20, 20);
+  s.setColor(255, 255, 0);
+  badFalling.add(s);
+}
+
+
+void startScreen() {
+  background(25, 25, 25);
+  startButton.setColor(255, 255, 255);
+  startButton.display();
+  textSize(20);
+  fill(0, 0, 0);
+  text("start", startButton.getX(), startButton.getY());
+  fill(255, 255, 255);
+  text("Collect the white cubes", 200, 440);
+  text("Avoid the yellow cubes", 200, 480);
+  text("Click to open and close catchers", 200, 520);
+  text("Blue means open", 200, 560);
+  text("Red means closed", 200, 600); 
+  text("You can eat 9 bombs before you lose", 200, 640);
+  text("Good Luck! :)", 200, 680);
+}
+
+
+void mousePressed() {
+  Integer i = 0;
+  for( Sprite c : catchers) {
+    if (c.touchingPoint(mouseX, mouseY)) {
+      open.set(i, (!open.get(i)));
+    }
+    i = i+1;
+  }
+  
+  if (startButton.touchingPoint(mouseX, mouseY)) {
+    stage = 0;
+    score = 0;
+    bombCounter = 0;
+    goodFalling.clear();
+    badFalling.clear();
+  }
+}
+
