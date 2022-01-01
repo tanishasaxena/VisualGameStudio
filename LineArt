@@ -1,0 +1,22 @@
+float h = 0;
+
+void setup(){
+    size(500, 500);
+}
+
+void draw(){
+    background(0);
+    colorMode(HSB);
+    strokeWeight(2);
+    ellipse(250, 250, 200, 200);
+    for(int i = 0; i <= 500; i = i + 20){
+        noStroke();
+        fill(h, 200, 200);
+        stroke(h, 255, 255);
+        h = (h + 0.015)%255;
+        line(0, i, height-i, 0);
+        line(500, i, height-i, 500);
+        line(0, i, i, height);
+        line(width, i, i, 0);
+    }
+}
