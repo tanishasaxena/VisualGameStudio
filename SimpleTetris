@@ -1,0 +1,186 @@
+
+int numCol = 10;
+int numRow = 15;
+int blockSpeed = 15;
+Sprite currBlock;
+ArrayList<Sprite> blocks = new ArrayList<>();
+
+void setup(){
+    size(600, 900);
+    colorMode(HSB);
+    currBlock = new Sprite((int)random(0, numCol), 0, 60, 60);
+    currBlock.setColor(random(0, 255), 255, 255);
+    
+}
+
+void draw(){
+    drawBackground();
+    currBlockControls();
+    blockControls();
+}
+
+void currBlockControls(){
+    currBlock.display();
+    
+    // checks if there is a block below the current one
+    boolean isBlockBelow = false;
+    for(Sprite b : blocks){
+        if( (b.getCol() == currBlock.getCol()) && (b.getRow() == (currBlock.getRow()+1) ) ) isBlockBelow = true;
+    }
+    
+    // if the block can move down, move it down
+    if(frameCount%blockSpeed == 0 && !isBlockBelow){
+        //println("col: " + currBlock.getCol() + " row: " + currBlock.getRow());
+        currBlock.moveRow(1);
+    }
+    
+    // if the block is at the bottom or cannot move down, create a new block to fall
+    if(currBlock.getRow() >= (numRow-1) || isBlockBelow){
+        blocks.add(currBlock);
+        currBlock = new Sprite( (int)random(0, numCol) , 0, 60, 60);
+        //println(currBlock.getRow() + " " + currBlock.getCol());
+        currBlock.setColor(random(0, 255), 255, 255);
+    } 
+    
+}
+
+void blockControls(){
+    for(Sprite b : blocks){
+        b.display();
+    }
+    
+    // check if a row is full (really inefficient lmao)
+    int fullRow = -1;
+    for(int i = 0; i<numRow; i++){
+        int numInCurr = 0;
+        // it is impossible according to the way the game was created for multiple blocks to be in the same row & column so hacks
+        for(Sprite b : blocks){
+            if(b.getRow() == i) numInCurr++; 
+        }
+        if(numInCurr == numCol) fullRow = i;
+    }
+    
+    // delete the full row and move everything above of it down by one
+    if(fullRow != -1){
+        ArrayList<Sprite> removeRow = new ArrayList<>();
+        for(Sprite b : blocks){
+            if(b.getRow() == fullRow){
+                removeRow.add(b);
+            }
+            if(b.getRow() < fullRow) b.moveRow(1);
+        }
+        blocks.removeAll(removeRow);
+    }
+    
+}
+
+void drawBackground(){
+    fill(10, 10, 10, 50);
+    rect(0, 0, width, height);
+    /*
+    stroke(255);
+    strokeWeight(5);
+    for(int i = 0; i<numCol; i++){
+        line(getCol(i), 0, getCol(i), height);
+    }
+    */
+}
+
+int getCol(int i){
+    return i*(600/numCol);
+}
+
+int getRow(int i){
+    return i * (900/numRow);
+}
+
+void keyPressed(){
+    if( (keyCode == RIGHT) && (currBlock.getCol() < (numCol-1)) ) currBlock.moveCol(1);
+    if( (keyCode == LEFT)  && (currBlock.getCol() > 0) ) currBlock.moveCol(-1);
+    
+    if( keyCode == ENTER) {
+        // TODO: infinite loop ?
+        boolean canMoveDown = true;
+        int finRow = currBlock.getRow();
+        while(canMoveDown && finRow < numRow-1){
+            for(Sprite b : blocks){
+                if( (b.getCol() == currBlock.getCol()) && (b.getRow() == (finRow+1) ) ) canMoveDown = false;
+            }
+            if(canMoveDown) finRow++;
+        }
+        println("col: " + currBlock.getCol() + " row: " + finRow);
+        currBlock.setRow(finRow);
+    }
+}
+
+class Sprite{
+    int r, c, w, h;
+    // x y width height speed
+    float hue, sat, bri;
+    //   color values
+    float s;
+    //   stroke weight
+    float rs, gs, bs;
+    //   stroke colors
+    
+    Sprite(int xp, int yp, int wi, int he){
+        r = yp;
+        c = xp;
+        w = wi;
+        h = he;
+        s = 5;
+        hue = sat = bri = rs = gs = bs = 0;
+    }
+    
+    void display(){
+        strokeWeight(s);
+        stroke(rs, gs, bs);
+        fill(hue, sat, bri);
+        rect(getC(c), getR(r), w, h);
+    }
+    
+    void moveCol(int m){
+        c+=m;
+    }
+    
+    void moveRow(int m){
+        r+=m;
+    }
+    
+    int getRow(){ return r; }
+    int getCol(){ return c; }
+    
+    void setCol(int m){
+        c = m;
+    }
+    
+    void setRow(int m){
+        r = m;
+    }
+    
+    void setColor(float rm, float gm, float bm){
+        hue = rm;
+        sat = bm;
+        bri = gm;
+    }
+    
+    /*
+    void setStrokeWeight(float m){
+        s = m;
+    }
+    
+    void setStroke(float rm, float gm, float bm){
+        rs = rm;
+        gs = gm;
+        bs = bm;
+    }
+    */
+    
+    int getC(int i){
+        return i*(600/numCol);
+    }
+
+    int getR(int i){
+        return i * (900/numRow);
+    }
+}
