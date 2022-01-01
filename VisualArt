@@ -1,0 +1,32 @@
+// GLOBAL VARIABLES
+int circleX = 200;
+int circleY = 200;
+int colorR = 0;
+int rectX = 100;
+
+void setup(){
+    size(600, 600);
+}
+
+void draw(){
+    background(0, 0, 0);
+    colorMode(HSB);
+    fill(colorR, 255, 255); // controls the color inside the shapes
+    noStroke();   // no outline to the shapes
+    rect(rectX, 100, 50, 50);  // rectangle
+    ellipse(circleX, circleY, 100, 100);  // circle
+    ellipse(600-circleX, 600 - circleY, 100, 100);
+    fill(0, 0, 255);
+    triangle(300, 300, 300, 400, 500, 100); // triangle
+    stroke(255, 255, 255);  // color of the outline / line
+    strokeWeight(5);  // thickness of the outline / line
+    line(200, 10, 400, 580); // the line
+    // rect(x, y, width, height);
+    circleX = mouseX;
+    circleY = mouseY;
+    colorR = rectX/2;
+    rectX = rectX + 3;
+    if(rectX > 600){
+        rectX = 0;
+    }
+}
