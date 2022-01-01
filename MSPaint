@@ -1,0 +1,173 @@
+boolean pressed = false;
+boolean rainbow = false;
+boolean yesSticker = false;
+
+String smileUrl = "http://cdn.shopify.com/s/files/1/1061/1924/products/Smiling_Face_Emoji_grande.png?v=1480481056";
+String eraserUrl = "https://static.techspot.com/images2/downloads/topdownload/2014/09/HistoryEraser.png";
+
+Sprite redBlock = new Sprite(50, 50, 50, 50);
+Sprite orangeBlock = new Sprite(125, 50, 50, 50);
+Sprite yellowBlock = new Sprite(200, 50, 50, 50);
+Sprite greenBlock = new Sprite(275, 50, 50, 50);
+Sprite blueBlock = new Sprite(350, 50, 50, 50);
+Sprite purpleBlock = new Sprite(425, 50, 50, 50);
+Sprite pinkBlock = new Sprite(500, 50, 50, 50);
+Sprite rainbowBlock = new Sprite(575, 50, 50, 50);
+Sprite stickerBlock = new Sprite(smileUrl, 650, 50, 50, 50);
+Sprite eraserBlock = new Sprite(eraserUrl, 725, 50, 50, 50);
+// TODO: Add a url later
+
+ArrayList<Sprite> stickers = new ArrayList<>();
+
+int r = 0;
+int g = 0;
+int b = 0;
+
+float h = 0;
+int s = 255;
+int br = 255;
+
+int strokeSize = 10;
+
+void setup(){
+    size(800, 800);
+    background(0);
+    colorMode(RGB);
+    redBlock.setColor(255, 0, 0);
+    orangeBlock.setColor(255, 152, 0);
+    yellowBlock.setColor(255, 255, 0);
+    greenBlock.setColor(0, 255, 0);
+    blueBlock.setColor(0, 0, 255);
+    purpleBlock.setColor(174, 0, 237);
+    pinkBlock.setColor(255, 0, 174);
+    rainbowBlock.setColor(150, 150, 150);
+}
+
+void draw(){
+    redBlock.display();
+    orangeBlock.display();
+    yellowBlock.display();
+    greenBlock.display();
+    blueBlock.display();
+    purpleBlock.display();
+    pinkBlock.display();
+    rainbowBlock.display();
+    stickerBlock.display();
+    eraserBlock.display();
+    
+    // vv Displaying the rainbow
+    if(rainbow == true && pressed == true){
+        colorMode(HSB);
+        strokeWeight(strokeSize);
+        stroke(h, s, br);
+        line(pmouseX, pmouseY, mouseX, mouseY);
+        h = (h + 1)%255;
+        rainbowBlock.setColor(h, 255, 255);
+    }
+    
+    // adding the stickers
+    else if(yesSticker == true && pressed == true){
+        Sprite s = new Sprite(smileUrl, mouseX, mouseY, 50, 50);
+        stickers.add(s);
+    }
+    
+    // drawing any other color
+    else if(pressed == true){
+        colorMode(RGB);
+        strokeWeight(strokeSize);
+        stroke(r, g, b);
+        line(pmouseX, pmouseY, mouseX, mouseY);
+    }
+    // vv Displaying the stickers 
+    for(Sprite s : stickers){
+        s.display();
+    }
+}
+
+
+void mousePressed(){
+    pressed = true;
+    if(redBlock.touchingPoint(mouseX, mouseY)){
+        r = 255;
+        g = 0;
+        b = 0;
+        rainbow = false;
+        yesSticker = false;
+    }
+    if(orangeBlock.touchingPoint(mouseX, mouseY)){
+        r = 255;
+        g = 152;
+        b = 0;
+        rainbow = false;
+        yesSticker = false;
+    }
+    if(yellowBlock.touchingPoint(mouseX, mouseY)){
+        r = 255;
+        g = 255;
+        b = 0;
+        rainbow = false;
+        yesSticker = false;
+    }
+    if(greenBlock.touchingPoint(mouseX, mouseY)){
+        r = 0;
+        g = 255;
+        b = 0;
+        rainbow = false;
+        yesSticker = false;
+    }
+    if(blueBlock.touchingPoint(mouseX, mouseY)){
+        r = 0;
+        g = 0;
+        b = 255;
+        rainbow = false;
+        yesSticker = false;
+    }
+    if(purpleBlock.touchingPoint(mouseX, mouseY)){
+        r = 174;
+        g = 0;
+        b = 237;
+        rainbow = false;
+        yesSticker = false;
+    }
+    if(pinkBlock.touchingPoint(mouseX, mouseY)){
+        r = 255;
+        g = 0;
+        b = 174;
+        rainbow = false;
+        yesSticker = false;
+    }
+    if(eraserBlock.touchingPoint(mouseX, mouseY)){
+        r = 0;
+        g = 0;
+        b = 0;
+        rainbow = false;
+        yesSticker = false;
+    }
+    if(rainbowBlock.touchingPoint(mouseX, mouseY)){
+        rainbow = true;
+        yesSticker = false;
+    }
+    if(stickerBlock.touchingPoint(mouseX, mouseY)){
+        yesSticker = true;
+        rainbow = false;
+    }
+}
+
+void mouseReleased(){
+    pressed = false;
+    colorMode(RGB);
+    rainbowBlock.setColor(150, 150, 150);
+}
+
+void keyPressed(){
+    if(key == ' '){
+        background(0);
+        stickers.clear();
+    }
+    if(keyCode == UP){
+        strokeSize++;
+    }
+    if(keyCode == DOWN){
+        strokeSize--;
+    }
+}
