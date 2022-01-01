@@ -1,0 +1,82 @@
+int y = 300;
+int x = 75;
+int enimX = 500;
+int enimY = 293;
+int jump_height = 0;
+boolean collision = false;
+int score = 0; 
+
+void setup(){
+    size(800, 500);
+}
+
+void draw(){
+    background(100);
+    fill(0);
+    rect(0, 353, 800, 10);
+    fill(255);
+    noStroke();
+    textSize(30);
+    text(score, 50, 50);
+    rect(x, y, 50, 50);
+    if (jump_height > 0) {
+        // moves up by this speed
+        y-=5;
+        jump_height-=5;
+    } else if (y<=300) {
+        // moves down by this speed
+        y+=3;
+    }
+    ///////////MAKING THE ENEMIES///////////
+    fill(175, 22, 22);
+    rect(enimX, enimY, 17, 60);
+    //Checking for collision 
+    if((x+50>=enimX && x<=enimX+17) && (y+50<=enimY+60 && y+50>=enimY)){
+        collision=true;
+    }
+    //Changing to losing screen
+    if(collision==true){
+        background(255);
+        textSize(75);
+        textMode(CENTER);
+        text("YOU DIED!", 220, 300);
+    }
+    // Moving the enemy
+    if(enimX>=0){
+        enimX-=random(4, 10);
+    }
+    else{
+        enimX=800;
+    }
+    if(x<0){
+        x=0;
+    }
+    else if(x>800){
+        x=800; 
+    }
+    else if (y<0){
+        y=0;
+    }
+    if(enimX < x) score++;
+}
+
+
+void keyPressed(){
+    // detects if "w" is pressed
+    // tells to jump
+    if(key == 'w'){
+        jump(); 
+    }
+    // move left and right (how to do smoothly?)
+    if(key == 'd'){
+        x+=5;
+    }
+    if(key == 'a'){
+        x-=5;
+    }
+}
+
+void jump(){
+    // how high the main sprite jumps
+    jump_height = 120;
+}
