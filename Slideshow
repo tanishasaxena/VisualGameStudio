@@ -1,0 +1,62 @@
+
+String url = "https://inhabitat.com/wp-content/blogs.dir/1/files/2013/08/leaf-veins.jpg";
+String rightArrowUrl = "http://pixsector.com/cache/fdcadf05/avd5f611c08d803886a54.png";
+String url2 = "https://hips.hearstapps.com/ghk.h-cdn.co/assets/15/33/1439490128-plants.jpg";
+String leftArrowUrl = "http://pixsector.com/cache/85c25e82/av668d1791f7ab43c8268.png";
+
+PImage leaf;
+PImage rArrow;
+PImage leaf2;
+PImage lArrow;
+
+int slide = 1;
+
+void setup(){
+    size(600, 400);
+    leaf = loadImage(url);
+    rArrow = loadImage(rightArrowUrl);
+    leaf2 = loadImage(url2);
+    lArrow = loadImage(leftArrowUrl);
+    imageMode(CENTER);
+}
+
+void draw(){
+    if(slide == 1){
+        image(leaf, 300, 200, 600, 400);
+    }
+    if(slide == 2){
+        image(leaf2, 300, 200, 600, 400);
+    }
+    
+    image(rArrow, 560, 370, 50, 50);
+    image(lArrow, 40, 370, 50, 50);
+}
+
+void mousePressed(){
+    if(mouseX > 535 && mouseY > 345){
+        slide = slide + 1;
+    }
+    if(mouseX < 65 && mouseY > 345){
+        slide = slide - 1;
+    }
+    
+    /* 
+    
+    **right arrow
+    - x position of you arrow image - 1/2 the width of the image
+    - y position of your arrow image - 1/2 the height of the image
+    
+    ** left arrow
+    - x position of the image + 1/2 the width
+    - y position of the image - 1/2 the height 
+    
+    
+    - because we used imageMode center so the x position isn't 
+    - the upper left its the center of the image
+    
+    */
+    
+    // 30, 30
+    // 40, 40
+    // if(mouseX <  50 && mouseY < 50)
+}
