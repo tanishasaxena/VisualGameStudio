@@ -1,0 +1,169 @@
+
+Sprite cube = new Sprite(100, 100, 50, 50);
+Sprite floor = new Sprite(400, 380, 800, 40);
+Float grav = 0.0;
+Integer eSpeed = -4;
+Integer stage = 2;
+Integer hp = 400;
+ArrayList<Sprite> enemies = (new ArrayList());
+Sprite resetButton = new Sprite(400, 270, 100, 50);
+Sprite hpBar = new Sprite(0, 25, hp, 15);
+Boolean paused = false;
+
+
+void mousePressed() {
+  if (resetButton.touchingPoint(mouseX, mouseY)) {
+    stage = 0;
+    hp = 400;
+    enemies.clear();
+  }
+}
+
+
+void cubeControls() {
+  cube.setColor(255, 255, 255);
+  cube.moveY(grav);
+  if (cube.touchingSprite(floor)) {
+    grav = 0.0;
+    cube.setY(floor.getY()-(floor.getH()/2)-(cube.getH()/2)+1);
+  }
+  if (pressed("UP") && cube.touchingSprite(floor)) {
+    grav = -14.0;
+  }
+  if (pressed("RIGHT")) {
+    cube.moveX(4);
+  }
+  if (pressed("LEFT")) {
+    cube.moveX(-4);
+  }
+  if (cube.getX() < 25) {
+    cube.setX(25);
+  }
+  if (cube.getX() > 775) {
+    cube.setX(775);
+  }
+}
+
+
+void keyPressed() {
+  if (pressed(" ")) {
+    paused = !paused;
+  }
+  if (pressed("s")) {
+    stage = 0;
+  }
+}
+
+void hpControls() {
+  hpBar.display();
+  hpBar.setSize(hp, 15);
+  if (hp < 250) {
+    hpBar.setColor(255, 0, 0);
+  } else if (hp < 300) {
+    hpBar.setColor(255, 145, 0);
+  } else if (hp < 350) {
+    hpBar.setColor(255, 255, 0);
+  } else {
+    hpBar.setColor(0, 255, 0);
+  }
+  if (hp <= hp/2) {
+    stage = 1;
+  }
+}
+
+/** POSITION: 0;977 */
+void gravControls() {
+  grav = grav+0.6;
+}
+
+
+void draw() {
+  noStroke();
+  background(25, 25, 25);
+  floor.setColor(100, 100, 100);
+  if (stage == 0) {
+    game();
+  }
+  if (stage == 1) {
+    endGame();
+  }
+  if (stage == 2) {
+    startScreen();
+  }
+}
+
+
+void startScreen() {
+  background(0, 0, 0);
+  fill(255, 255, 255);
+  textSize(40);
+  text("press 's' to start", 400, 200);
+  text("arrow keys to move", 400, 250);
+  text("space to pause", 400, 300);
+}
+
+
+void setup() {
+  size(800, 400);
+}
+
+
+void endGame() {
+  background(0, 0, 0);
+  fill(255, 255, 255);
+  textSize(30);
+  text("TRY AGAIN", 400, 200);
+  fill(0, 0, 0);
+  resetButton.setColor(255, 255, 255);
+  resetButton.display();
+  textSize(20);
+  text("~reset~", 400, 270);
+}
+
+
+void pause() {
+  fill(0, 0, 0, 120);
+  rect(400, 200, 800, 400);
+  
+  
+  fill(255, 255, 255);
+  textSize(70);
+  text("PAUSED", 400, 200);
+  eSpeed = 0;
+}
+
+
+void game() {
+  cube.display();
+  if (paused == true) {
+    pause();
+  } else {
+    eSpeed = -4;
+    cubeControls();
+  }
+  floor.display();
+  gravControls();
+  enemyControls();
+  hpControls();
+}
+
+
+void enemyControls() {
+  for( Sprite e : enemies) {
+    e.display();
+    e.moveX(eSpeed);
+    if (e.touchingSprite(cube) && paused == false) {
+      hp = hp-1;
+    }
+    if (e.getX() < -e.getW()/2) {
+      enemies.remove(e);
+    }
+  }
+  
+  if (frameCount%120 == 0) {
+    Sprite enemy = new Sprite((random(820, 900)), 325, (random(10, 50)), (random(20, 75)));
+    enemy.setY(floor.getY()-(floor.getH()/2)-(enemy.getH()/2)+1);
+    enemy.setColor(175, 175, 175);
+    enemies.add(enemy);
+  }
+}
