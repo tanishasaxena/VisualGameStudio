@@ -1,0 +1,328 @@
+Sprite tl = new Sprite(100, 100, 125, 125);
+Sprite tm = new Sprite(250, 100, 125, 125);
+Sprite tr = new Sprite(400, 100, 125, 125);
+
+Sprite ml = new Sprite(100, 250, 125, 125);
+Sprite mm = new Sprite(250, 250, 125, 125);
+Sprite mr = new Sprite(400, 250, 125, 125);
+
+Sprite bl = new Sprite(100, 400, 125, 125);
+Sprite bm = new Sprite(250, 400, 125, 125);
+Sprite br = new Sprite(400, 400, 125, 125);
+
+int a1 = 0;
+int a2 = 0;
+int a3 = 0;
+
+int b1 = 0;
+int b2 = 0;
+int b3 = 0;
+
+int c1 = 0;
+int c2 = 0;
+int c3 = 0;
+
+int slide = 0;
+
+boolean xTurn = true;
+
+int winTimer = 60;
+
+void setup(){
+    size(500, 500);
+    background(0);
+}
+
+void draw(){
+    if(slide == 0){
+        startScreen();
+    }
+    if(slide == 1){
+        grid();
+        if(isWinning(1) || isWinning(2)){
+            if(winTimer == 0){
+                slide = 2;
+            }
+            winTimer--;
+        }
+        else if(isTie()){
+            if(winTimer == 0){
+                slide = 2;
+            }
+            winTimer--;
+        }
+        fill(0);
+        noStroke();
+        rect(200, 460, 100, 40);
+        textSize(20);
+        fill(255);
+        if(xTurn){
+            text("Red's turn", 250, 475);
+        }
+        if(!xTurn){
+            text("Blue's turn", 250, 475);
+        }
+    }
+    if(slide == 2){
+        winScreen();
+    }
+}
+
+void grid(){
+    stroke(0, 255, 255);
+    strokeWeight(20);
+    line(174, 25, 174, 475);
+    line(324, 25, 324, 475);
+    
+    line(25, 174, 475, 174);
+    line(25, 324, 475, 324);
+}
+
+void mousePressed(){
+    if(slide == 0){
+        slide = 1;
+        background(0);
+    }
+    else if(slide == 1 && winTimer == 60){
+        if(xTurn){
+            makeX();
+        }
+        else{
+            makeO();
+        }
+    }
+    else if(slide == 2){
+        slide = 1;
+        background(0);
+        grid();
+        winTimer = 60;
+        a1 = 0;
+        a2 = 0;
+        a3 = 0;
+        b1 = 0;
+        b2 = 0;
+        b3 = 0;
+        c1 = 0;
+        c2 = 0;
+        c3 = 0;
+    }
+}
+
+void makeX(){
+    fill(255, 0, 0);
+    noStroke();
+    if(tl.touchingPoint(mouseX, mouseY)){
+        if(a1 == 0){
+            ellipse(tl.getX(), tl.getY(), 100, 100);
+            a1 = 1;
+            xTurn = !xTurn;
+        }
+    }
+    if(tm.touchingPoint(mouseX, mouseY)){
+        if(a2 == 0){
+            ellipse(tm.getX(), tm.getY(), 100, 100);
+            a2 = 1;
+            xTurn = !xTurn;
+        }
+    }
+    if(tr.touchingPoint(mouseX, mouseY)){
+        if(a3 == 0){
+            ellipse(tr.getX(), tr.getY(), 100, 100);
+            a3 = 1;
+            xTurn = !xTurn;
+        }
+        
+    }
+    if(ml.touchingPoint(mouseX, mouseY)){
+        if(b1 == 0){
+            ellipse(ml.getX(), ml.getY(), 100, 100);
+            b1 = 1;
+            xTurn = !xTurn;
+        }
+        
+    }
+    if(mm.touchingPoint(mouseX, mouseY)){
+        if(b2 == 0){
+            ellipse(mm.getX(), mm.getY(), 100, 100);
+            b2 = 1;
+            xTurn = !xTurn;
+        }
+    }
+    if(mr.touchingPoint(mouseX, mouseY)){
+        if(b3 == 0){
+            ellipse(mr.getX(), mr.getY(), 100, 100);
+            b3 = 1;
+            xTurn = !xTurn;
+        }
+    }
+    
+    if(bl.touchingPoint(mouseX, mouseY)){
+        if(c1 == 0){
+            ellipse(bl.getX(), bl.getY(), 100, 100);
+            c1 = 1;
+            xTurn = !xTurn;
+        }
+    }
+    if(bm.touchingPoint(mouseX, mouseY)){
+        if(c2 == 0){
+            ellipse(bm.getX(), bm.getY(), 100, 100);
+            c2 = 1;
+            xTurn = !xTurn;
+        }
+    }
+    if(br.touchingPoint(mouseX, mouseY)){
+        if(c3 == 0){
+            ellipse(br.getX(), br.getY(), 100, 100);
+            c3 = 1;
+            xTurn = !xTurn;
+        }
+    }
+}
+
+void makeO(){
+    fill(0, 0, 255);
+    noStroke();
+    if(tl.touchingPoint(mouseX, mouseY)){
+        if(a1 == 0){
+            ellipse(tl.getX(), tl.getY(), 100, 100);
+            a1 = 2;
+            xTurn = !xTurn;
+        }
+    }
+    if(tm.touchingPoint(mouseX, mouseY)){
+        if(a2 == 0){
+            ellipse(tm.getX(), tm.getY(), 100, 100);
+            a2 = 2;
+            xTurn = !xTurn;
+        }
+    }
+    if(tr.touchingPoint(mouseX, mouseY)){
+        if(a3 == 0){
+            ellipse(tr.getX(), tr.getY(), 100, 100);
+            a3 = 2;
+            xTurn = !xTurn;
+        }
+        
+    }
+    if(ml.touchingPoint(mouseX, mouseY)){
+        if(b1 == 0){
+            ellipse(ml.getX(), ml.getY(), 100, 100);
+            b1 = 2;
+            xTurn = !xTurn;
+        }
+        
+    }
+    if(mm.touchingPoint(mouseX, mouseY)){
+        if(b2 == 0){
+            ellipse(mm.getX(), mm.getY(), 100, 100);
+            b2 = 2;
+            xTurn = !xTurn;
+        }
+    }
+    if(mr.touchingPoint(mouseX, mouseY)){
+        if(b3 == 0){
+            ellipse(mr.getX(), mr.getY(), 100, 100);
+            b3 = 2;
+            xTurn = !xTurn;
+        }
+    }
+    
+    if(bl.touchingPoint(mouseX, mouseY)){
+        if(c1 == 0){
+            ellipse(bl.getX(), bl.getY(), 100, 100);
+            c1 = 2;
+            xTurn = !xTurn;
+        }
+    }
+    if(bm.touchingPoint(mouseX, mouseY)){
+        if(c2 == 0){
+            ellipse(bm.getX(), bm.getY(), 100, 100);
+            c2 = 2;
+            xTurn = !xTurn;
+        }
+    }
+    if(br.touchingPoint(mouseX, mouseY)){
+        if(c3 == 0){
+            ellipse(br.getX(), br.getY(), 100, 100);
+            c3 = 2;
+            xTurn = !xTurn;
+        }
+    }
+}
+
+void startScreen(){
+    background(0);
+    textAlign(CENTER);
+    textSize(40);
+    fill(255);
+    text("Welcome to Tic-Tac-Toe", 250, 250);
+    textSize(30);
+    text("Click to start", 250, 300);
+}
+
+void winScreen(){
+    background(0);
+    textSize(50);
+    textAlign(CENTER);
+    if(isWinning(1)){
+        fill(255, 0, 0);
+        text("RED", 250, 250);
+        fill(255);
+        textSize(40);
+        text("has won", 250, 300);
+        textSize(30);
+        text("Click to restart", 250, 400);
+    }
+    else if(isWinning(2)){
+        fill(0, 0, 255);
+        text("BLUE", 250, 250);
+        fill(255);
+        textSize(40);
+        text("has won", 250, 300);
+        textSize(30);
+        text("Click to restart", 250, 400);
+    }
+    else if(isTie()){
+        fill(0, 255, 0);
+        text("YOU TIED", 250, 250);
+        fill(255);
+        textSize(30);
+        text("Click to restart", 250, 400);
+    }
+}
+
+boolean isWinning(int a){
+    if(areEqual(a, a1, a2, a3) 
+    || areEqual(a, b1, b2, b3) 
+    || areEqual(a, c1, c2, c3) 
+    || areEqual(a, a1, b1, c1) 
+    || areEqual(a, a2, b2, c2)
+    || areEqual(a, a3, b3, c3)
+    || areEqual(a, a1, b2, c3)
+    || areEqual(a, a3, b2, c1)){
+        return true;
+    }
+    return false;
+}
+
+boolean areEqual(int m, int a, int b, int c){
+    if(m == a && a == b && b == c){
+        return true;
+    }
+    return false;
+}
+
+boolean isTie(){
+    if(a1 != 0
+    && a2 != 0
+    && a3 != 0
+    && b1 != 0
+    && b2 != 0
+    && b3 != 0
+    && c1 != 0
+    && c2 != 0
+    && c3 != 0){
+        return true;
+    }
+    return false;
+}
