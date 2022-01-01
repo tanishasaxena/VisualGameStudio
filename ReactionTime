@@ -1,0 +1,109 @@
+int slide = 0;
+int screenTimer = (int)random(120, 300);
+int clickTimer = 0;
+float[] attempts = new float[5];
+int attemptNum = 0;
+
+void setup(){
+    size(600, 600);
+    textAlign(CENTER);
+}
+
+void draw(){
+    if(slide == 0){
+        startScreen();
+    }
+    fill(255);
+    if(slide == 1){
+        waitScreen();
+    }
+    if(slide == 2){
+        clickScreen();
+    }
+    if(slide == 3){
+        earlyScreen();
+    }
+    if(slide == 4){
+        endScreen();
+    }
+    if(slide == 5){
+        finalScreen();
+    }
+}
+
+void startScreen(){
+    background(255);
+    textSize(50);
+    fill(0);
+    text("Welcome to the\n Reaction Time Game\n Click to start", 300, 300);
+}
+
+void waitScreen(){
+    background(255, 0, 0);
+    textSize(50);
+    text("Wait for green", 300, 300);
+    screenTimer = screenTimer - 1;
+    if(screenTimer <= 0){
+        slide = 2;
+    }
+}
+
+void clickScreen(){
+    background(0, 255, 0);
+    textSize(50);
+    text("CLICK", 300, 300);
+    clickTimer = clickTimer + 1000/60;
+}
+
+void mousePressed(){
+    if(slide == 0){
+        slide = 1;
+    }
+    else if(slide == 1){
+        slide = 3;
+    }
+    else if(slide == 2){  // click screen to the end screen
+        slide = 4;
+        attempts[attemptNum] = clickTimer;
+        attemptNum = attemptNum + 1;
+    }
+    else if(slide == 4 && attemptNum == 5){
+        slide = 5;
+    }
+    else if (slide == 3 || slide == 4){
+        slide = 1;
+        screenTimer = (int)random(120, 300);
+        clickTimer = 0;
+    }
+    else if (slide == 5){
+        slide = 0;
+        attemptNum = 0;
+        screenTimer = (int)random(120, 300);
+        clickTimer = 0;
+    }
+}
+
+void earlyScreen(){
+    background(150, 0, 150);
+    textSize(50);
+    text("You clicked too early", 300, 300);
+}
+
+void endScreen(){
+    background(100, 100, 255);
+    textSize(50);
+    text("You took\n" + clickTimer +  " ms\n to react", 300, 250);
+    textSize(40);
+    text("Attempt " + attemptNum + " out of 5", 300, 425);
+}
+
+void finalScreen(){
+    float avg = 0;
+    for(int i = 0; i < attempts.length; i = i + 1){
+        avg = avg + attempts[i];
+    }
+    avg = avg / attempts.length;
+    background(200, 10, 150);
+    textSize(50);
+    text("Your reaction time is\n on average\n " + avg + " ms", 300, 300);
+}
