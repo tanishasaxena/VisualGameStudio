@@ -1,0 +1,60 @@
+//Global Variables
+String url= "https://pizzacityusa.com/wp-content/uploads/2018/04/Pizza-City-hat.png";
+String url2= "https://i1.wp.com/grubbits.com/wp-content/uploads/2018/12/roast-beef-and-gravy-pizza.png?fit=800%2C550";
+// we didn't do images either
+PImage img;
+PImage img2;
+float[] snowY = new float[100];
+float[] snowX = new float[100];
+
+void setup(){
+    size(800, 800);
+    img = loadImage(url);
+    img2 = loadImage(url2);
+    for(int i = 0; i<snowY.length; i++){
+        snowY[i] = random(0, 800);
+        snowX[i] = random(0, 800);
+    }
+}
+
+void draw(){
+    float night = -mouseY/6;
+    background(127+night, 191+night, 202+night);
+    strokeWeight(10);
+    stroke(255);
+    fill(175+night);
+    ellipse(400, 600, 200, 200); // bottom circle
+    ellipse(400, 475, 150, 150); // middle circle
+    ellipse(400, 385, 100, 100); // top circle
+    fill(255, 240, 0);
+    ellipse(150, mouseY, 150, 150); // sun
+    fill(200, 200, 255);
+    ellipse(650, 800-mouseY, 150, 150); // moon
+    image(img, 325, 250, 150, 175); // hat
+    image(img2, 385, 400, 150, 175); // pizza
+    noStroke();
+    // this was my own thing // no arrays were made on day 1
+    for(int i = 0; i<snowY.length; i++){
+        fill(255);
+        ellipse(snowX[i], snowY[i], 10, 10); // snow
+        snowY[i]+=3;
+        if(frameCount%10 == 0)snowX[i]+=random(-5, 5);
+        if(snowY[i]>800){
+            snowY[i] = 0;
+            snowX[i] = random(0, 800);
+        }
+    }
+}
+
+/*
+
+shapes
+if (changing color based on if)
+if (changing position based on if)
+globals - int, float
+stroke
+strokeWeight
+background
+colorMode
+
+*/
