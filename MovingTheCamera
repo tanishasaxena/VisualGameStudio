@@ -1,0 +1,195 @@
+
+ArrayList<Platform> lvlOne = new ArrayList<>();
+Player user;
+float grav = 0;
+boolean ooveLeft = false;
+boolean moveRight = false;
+boolean moveLeft = false;
+boolean canJump = true;
+
+void setup(){
+    size(800, 550);
+    setLvlOne();
+}
+
+void draw(){
+    playLvlOne();
+}
+
+void playLvlOne(){
+    background(255);
+    user.display();
+    moveAllPlatforms(lvlOne);
+    //playerControls();
+    for(Platform p : lvlOne){
+        p.display();
+    }
+}
+
+void setLvlOne(){
+    user = new Player(400, 450, 50, 50);
+    user.setColor(255, 0, 0);
+    // ground floor
+    lvlOne.add(new Platform(0, 500, 800, 50));
+    // left mid
+    lvlOne.add(new Platform(0, 400, 200, 30));
+}
+
+void playerControls(){
+    for(Platform p : lvlOne){
+        if( user.isBelow(p) && (user.topY() < p.bottomY()) ){
+            user.setY(p.bottomY()+1);
+            grav = 0;
+        }
+    }
+}
+
+void moveAllPlatforms(ArrayList<Platform> curr){
+    grav+=0.3;
+    if(moveRight){
+        for(Platform p : curr) p.moveX(-5);
+    }
+    if(moveLeft){
+        for(Platform p : curr) p.moveX(5);
+    }
+    for(Platform p : curr){
+        if(user.isOnTop(p)){
+            grav = 0;
+            user.setY(p.topY() - 50);
+            canJump = true;
+        }
+    }
+    for(Platform p : curr){
+        p.moveY(-grav);
+    }
+}
+
+void keyPressed(){
+    if(key == 'd'){
+        moveRight = true;
+    }
+    if(key == 'a'){
+        moveLeft = true;
+    }
+    if(key == 'w' && canJump){
+        user.moveY(-1);
+        grav -= 10;
+        canJump = false;
+    }
+}
+
+void keyReleased(){
+    if(key == 'd'){
+        moveRight = false;
+    }
+    if(key == 'a'){
+        moveLeft = false;
+    }
+}
+
+class Player extends Platform {
+    
+    Player(float xx, float yy, float ww, float hh){
+        super(xx, yy, ww, hh);
+    }
+    
+    boolean isOnTop(Platform p){
+        return (this.bottomY() >= p.topY()) 
+                && (this.topY() <= p.bottomY()) 
+                && (this.leftX() <= p.rightX()) 
+                && (this.rightX() >= p.leftX()); 
+    }
+    boolean isBelow(Platform p){
+        return (this.topY() > p.bottomY()) && (this.leftX() < p.rightX()) && (this.rightX() > p.leftX());
+    }
+}
+
+
+class Platform {
+    float x;
+    float y;
+    float w;
+    float h;
+    Color c = new Color(0, 0, 0);
+    
+    Platform(){
+        x = 0;
+        y = 0;
+        w = 10;
+        h = 10;
+    }
+    
+    Platform(float xx, float yy, float ww, float hh){
+        x = xx;
+        y = yy;
+        w = ww;
+        h = hh;
+    }
+    
+    void display(){
+        c.fillColor();
+        rect(x, y, w, h);
+    }
+    
+    void setColor(float rr, float gg, float bb){
+        c = new Color(rr, gg, bb);
+    }
+    
+    void setColor(Color a){
+        c = a;
+    }
+    
+    void setX(float a){
+        x = a;
+    }
+    
+    void setY(float a){
+        y = a;
+    }
+    
+    void setW(float a){
+        w = a;
+    }
+    
+    void setH(float a){
+        h = a;
+    }
+    
+    float topY(){
+        return y;
+    }
+    
+    float bottomY(){
+        return y + h;
+    }
+    
+    float leftX(){
+        return x;
+    }
+    
+    float rightX(){
+        return x+w;
+    }
+    
+    void moveX(float move){
+        x += move;
+    }
+    
+    void moveY(float move){
+        y += move;
+    }
+}
+
+class Color {
+    float r, g, b;
+    
+    Color(float rr, float gg, float bb){
+        r = rr;
+        g = gg;
+        b = bb;
+    }
+    
+    void fillColor() {
+        fill(r, g, b);
+    }
+}
