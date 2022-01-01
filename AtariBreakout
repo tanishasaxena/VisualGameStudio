@@ -1,0 +1,225 @@
+
+Sprite paddle = new Sprite(320, 450, 100, 20);
+ArrayList<Sprite> blocks = (new ArrayList());
+ArrayList<Sprite> blocks2 = (new ArrayList());
+ArrayList<Sprite> blocks3 = (new ArrayList());
+Integer x = 40;
+Sprite puck = new Sprite(paddle.getX()+15, 425, 15, 15);
+Integer puckSpeed = -3;
+Integer puckDir = int(random(-160, 160));
+Boolean noBlock = true;
+Integer page = 1;
+Sprite playButton = new Sprite(320, 240, 200, 75);
+
+
+void draw() {
+  if (page == 1) {
+    homeScreen();
+  } else if (page == 2) {
+    play();
+  }
+}
+
+void homeScreen() {
+  background(0, 0, 0);
+  textSize(40);
+  fill(255, 255, 255);
+  text("Welcome to Atari Breakout", 320, 60);
+  text("Press Space :)", 320, 400);
+  playButton.setColor(255, 255, 255);
+  playButton.display();
+  fill(0, 0, 0);
+  text("Play", 320, 240);
+  fill(255, 255, 255);
+  textSize(20);
+  text("r is reset", 320, 440);
+  if (pressed("Space")) {
+    page = 2;
+  }
+}
+
+
+void setup() {
+  reset();
+}
+
+
+void reset() {
+  fillBlocks();
+  puck.moveToPoint(paddle.getX()+15, 425);
+  puck.turnToDir((random(10, 170)));
+}
+
+
+void keyPressed() {
+  if (pressed("r")) {
+    reset();
+  }
+}
+
+
+void puckControls() {
+  puck.setColor(255, 255, 255);
+  puck.display();
+  puck.forward(5);
+  for( Sprite b : blocks) {
+    if (puck.touchingSprite(b)) {
+      puck.moveY(5);
+      puck.flipY();
+      blocks.remove(b);
+    }
+  }
+  
+  for( Sprite b : blocks2) {
+    if (puck.touchingSprite(b)) {
+      puck.moveY(5);
+      puck.flipY();
+      blocks2.remove(b);
+    }
+  }
+  
+  for( Sprite b : blocks3) {
+    if (puck.touchingSprite(b)) {
+      puck.moveY(5);
+      puck.flipY();
+      blocks3.remove(b);
+    }
+  }
+  
+  if (puck.getX() < 0) {
+    puck.flipX();
+  }
+  if (puck.getX() > 640) {
+    puck.flipX();
+  }
+  if (puck.getY() < 0) {
+    puck.flipY();
+  }
+}
+
+
+void paddleControls() {
+  paddle.setColor(255, 255, 255);
+  paddle.display();
+  if (pressed("RIGHT")) {
+    paddle.moveX(7);
+  }
+  if (pressed("LEFT")) {
+    paddle.moveX(-7);
+  }
+  if (paddle.getX() > 690) {
+    paddle.setX(-50);
+  }
+  if (paddle.getX() < -50) {
+    paddle.setX(690);
+  }
+}
+
+
+void blockControls() {
+  for( Sprite b : blocks) {
+    b.setColor(255, 255, 255);
+    b.display();
+  }
+  
+  for( Sprite b : blocks2) {
+    b.setColor(255, 255, 255);
+    b.display();
+  }
+  
+  for( Sprite b : blocks3) {
+    b.setColor(255, 255, 255);
+    b.display();
+  }
+  
+}
+
+
+void fillBlocks() {
+  x = 40; // set x to: 40
+  while((x < 660)) {
+    hasBlock(x, 30);
+    if (noBlock == true) {
+      blocks.add((new Sprite(x, 30, 50, 15)));
+    }
+    noBlock = true;
+    x = x+62;
+  }
+  
+  x = 40;
+  while((x < 660)) {
+    hasBlock(x, 60);
+    if (noBlock == true) {
+      blocks2.add((new Sprite(x, 60, 50, 15)));
+    }
+    noBlock = true;
+    x = x+62;
+  }
+  
+  x = 40;
+  while((x < 660)) {
+    hasBlock(x, 90);
+    if (noBlock == true) {
+      blocks3.add((new Sprite(x, 90, 50, 15)));
+    }
+    noBlock = true;
+    x = x+62;
+  }
+  
+}
+
+  
+void hasBlock(int x, int y) {
+  for( Sprite b : blocks) {
+    if (b.getX() == x && b.getY() == y) {
+      noBlock = false;
+    }
+  }
+  
+  for( Sprite b : blocks2) {
+    if (b.getX() == x && b.getY() == y) {
+      noBlock = false;
+    }
+  }
+  
+  for( Sprite b : blocks3) {
+    if (b.getX() == x && b.getY() == y) {
+      noBlock = false;
+    }
+  }
+  
+}
+
+
+void winningScreen() {
+  background(7, 150, 43);
+  textSize(70);
+  stroke(255, 255, 255);
+  text("You Won! :)", 320, 240);
+}
+
+
+void endingScreen() {
+  background(150, 43, 7);
+  textSize(70);
+  stroke(255, 255, 255);
+  text("You Lost :(", 320, 240);
+}
+
+
+void play() {
+  background(0, 0, 0);
+  if (puck.getY() > 480) {
+    endingScreen();
+  }
+  if (blocks.size() == 0 && blocks2.size() == 0 && blocks3.size() == 0) {
+    winningScreen();
+  }
+  if (puck.touchingSprite(paddle)) {
+    puck.flipY();
+    puck.moveY(-5);
+  }
+  blockControls();
+  paddleControls();
+  puckControls();
+}
