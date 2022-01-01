@@ -1,0 +1,28 @@
+
+Sprite player = new Sprite(100, 100, 50, 50);
+float grav = 0.0;
+Sprite floor = new Sprite(500, 550, 1000, 15);
+
+void setup(){
+    size(1000, 600);
+    player.setColor(100, 255, 12);
+    floor.setColor(255, 255, 255);
+}
+
+void draw(){
+    background(0);
+    player.display();
+    floor.display();
+    player.moveY(grav);
+    grav = grav + 0.6;
+    if(player.touchingSprite(floor)){
+        grav = 0.0;
+        player.setY(floor.getY()-7.5-25);
+    }
+}
+
+void keyPressed(){
+    if(keyCode == UP){
+        grav = -14.0;
+    }
+}
