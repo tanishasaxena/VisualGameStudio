@@ -1,0 +1,54 @@
+
+Integer timer = 0;
+String url = "http://www.pngpix.com/wp-content/uploads/2016/08/PNGPIX-COM-Button-PNG-Transparent-Image-1-500x469.png";
+Sprite pinkButton = new Sprite(url, 320, 340, 100, 100);
+String url2 = "https://www.usaeop.com/wp-content/uploads/2017/08/RESET-logo.png";
+Sprite reset = new Sprite(url2, 320, 180, 80, 25);
+String url3 = "http://www.iconarchive.com/download/i48662/custom-icon-design/pretty-office-7/Save.ico";
+Sprite saveButton = new Sprite(url3, 520, 210, 30, 30);
+String url4 = "https://loadlastsave.com/logo.png";
+Sprite loadSave = new Sprite(url4, 400, 240, 100, 100);
+String url5 = "https://d3tool.com/wp-content/uploads/2019/04/arrow-refresh-4-icon.png";
+Sprite resetStopwatch = new Sprite(url5, 520, 250, 30, 30);
+Boolean start_stop = true;
+Integer savedTime = 0;
+
+
+
+void draw() {
+  background(20, 20, 20);
+  fill(255, 255, 255);
+  pinkButton.display();
+  reset.display();
+  saveButton.display();
+  loadSave.display();
+  resetStopwatch.display();
+  text((timer/3600) + " : " + (timer/60)%60, 320, 240);
+  text((savedTime/3600) + " : " + (savedTime/60)%60, 520, 160);
+  if (start_stop == true) {
+    timer = timer+1;
+    text("started", 100, 240);
+  } else {
+    text("stopped", 100, 240);
+  }
+}
+
+
+void mousePressed() {
+  if (pinkButton.touchingPoint(mouseX, mouseY)) {
+    start_stop = !start_stop;
+  }
+  if (reset.touchingPoint(mouseX, mouseY)) {
+    timer = 0;
+  }
+  if (saveButton.touchingPoint(mouseX, mouseY)) {
+    savedTime = timer;
+  }
+  if (loadSave.touchingPoint(mouseX, mouseY)) {
+    timer = savedTime;
+  }
+  if (resetStopwatch.touchingPoint(mouseX, mouseY)) {
+    savedTime = 0;
+  }
+}
+
