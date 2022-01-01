@@ -1,0 +1,377 @@
+/*
+
+
+- Player: frog
+-- move side to side
+-- move forward
+-- gets run over by cars
+-- drowns in water
+
+- cars
+-- move left to right
+-- loop
+
+-------- How to only move once when you press up
+Create a boolean
+move up
+right after you move up set it to false
+
+- logs
+-- move side to side
+-- loop
+
+end
+-- reach the top of the screen
+
+*/
+
+/// GLOBAL VARIABLES
+
+String frogUrl = "http://www.classicgaming.cc/classics/frogger/images/icons/icon-frogger-pixel-512x512.png";
+String rCarUrl = "http://www.froggercssi.appspot.com/images/car1Right.png";
+String lCarUrl = "http://www.froggercssi.appspot.com/images/car1Left.png";
+Sprite frog = new Sprite(frogUrl,400, 950, 75, 75);
+Sprite gravelButton = new Sprite(825/2, 750, 200, 50);
+Sprite roadButton = new Sprite(825/2, 825, 200, 50);
+boolean up = true;
+boolean down = true;
+boolean right = true;
+boolean left = true;
+boolean yesGravel = true;
+ArrayList<Sprite> cars = new ArrayList<>();
+ArrayList<Sprite> roads = new ArrayList<>();
+ArrayList<Integer> speeds = new ArrayList<>();
+ArrayList<Sprite> coins = new ArrayList<>();
+int shrinkTimer = 0;
+int slide = 0;
+int lives = 3;
+int coinSize = 10;
+PImage f;
+PImage rCar;
+PImage lCar;
+
+void setup(){
+    size(825, 975);
+    textAlign(CENTER);
+    f = loadImage(frogUrl);
+    rCar = loadImage(rCarUrl);
+    lCar = loadImage(lCarUrl);
+    gravelButton.setColor(100, 100, 100);
+    roadButton.setColor(100, 100, 100);
+}
+
+void draw(){
+    if(slide == 0){
+        startScreen();
+    }
+    if(slide == 1){
+        background(0);
+        roadControls();
+        coinControls();
+        frogControls();
+        carControls();
+        displayLives();
+    }
+    if(slide == 2){
+        deathScreen();
+    }
+    if(slide == 3){
+        winningScreen();
+    }
+}
+
+void frogControls(){
+    frog.display();
+    if(shrinkTimer > 0){                                  // squash effects
+        frog.setSize(frog.getW()-1, frog.getH()-1);
+        shrinkTimer--;
+        up = false;
+        down = false;
+        right = false;
+        left = false;
+    }
+    if(frog.getW() <= 15){
+        if(lives == 1) slide = 2;
+        else{
+            lives--;
+            shrinkTimer = 0;
+            frog.setSize(75, 75);
+            frog.moveToPoint(400, 950);
+            frog.turnToDir(0);
+        }
+    }
+    if(frog.getX() < (frog.getW()/2)){
+        frog.setX(frog.getW()/2);
+    }
+    if(frog.getX() > (width-frog.getW()/2)){
+        frog.setX(width-frog.getW()/2);
+    }
+    if(frog.getY() > (height-(frog.getH()/2))){
+        frog.setY(height-(frog.getH()/2));
+    }
+    if(frog.getY() < frog.getH()/2 && coins.size()==0){
+        slide = 3;
+    }
+    if(frog.getY() < frog.getH()/2){
+        frog.setY(frog.getH()/2);
+    }
+}
+
+void carControls(){
+    int i = 0;
+    for(Sprite c : cars){
+        c.display();
+        c.moveX(speeds.get(i));
+        if(c.getX() < -c.getW()/2){
+            c.setX(width+c.getW()/2);
+        }
+        if(c.getX() > width+c.getW()/2){
+            c.setX(-c.getW()/2);
+        }
+        if(abs(frog.getX()-c.getX()) < 50 && abs(frog.getY()-c.getY()) < 35){
+            shrinkTimer = 60;
+        }
+        i++;
+    }
+}
+
+void roadControls(){
+    for(Sprite r: roads){
+        r.display();
+    }
+}
+
+void coinControls(){
+    for(Sprite c : coins){
+        c.display();
+        if(frog.touchingSprite(c)){
+            coins.remove(c);
+        }
+    }
+}
+
+void makeRoad(int row){
+    int rectY = (row*75)+45;
+    for(int i = 0; i<11; i++){
+        String roadUrl = "https://us.123rf.com/450wm/bryljaev/bryljaev1411/bryljaev141100078/34144431-stock-vector-asphalt-road-with-road-markings.jpg?ver=6";
+        String gravelUrl  = "https://cdn.wallpapersafari.com/17/71/9Oz3QY.jpg";
+        if(yesGravel){
+            Sprite r = new Sprite(gravelUrl,40+(i*80), rectY, 80, 80);
+            roads.add(r);
+        }
+        else{
+            Sprite r = new Sprite(roadUrl,40+(i*80), rectY, 80, 80);
+            r.turnToDir(90);
+            roads.add(r);
+        }
+    }
+    int numC = (int)random(1, 5);
+    int x = (int)random(250, 400);
+    int speed = (int)random(-7, 7);
+    while(speed == 0){
+        speed = (int)random(-7, 7);
+    }
+    while(numC > 0){
+        Sprite s = new Sprite(x, rectY, 100, 70);
+        if(speed < 0){
+            s.setImage(lCar);
+        }
+        else{
+            s.setImage(rCar);
+        }
+        cars.add(s);
+        x+=x;
+        numC--;
+        speeds.add(speed);
+    }
+}
+
+void addCoin(){
+    coins.add(new Sprite("https://bloodstainedritualofthenight.wiki.fextralife.com/file/Bloodstained-Ritual-of-The-Night/8-bit-coin-material-bloodstained-wiki-guide.png", random(15, width-15), random(90, height-160), 20, 20));
+}
+
+void keyPressed(){
+    if(keyCode == UP && (up == true)){
+        frog.turnToDir(0);
+        frog.moveY(-75);
+        up = false;
+    }
+    if(keyCode == DOWN && (down == true)){
+        frog.turnToDir(180);
+        frog.moveY(75);
+        down = false;
+    }
+    if(keyCode == LEFT && (left == true)){
+        frog.turnToDir(-90);
+        frog.moveX(-75);
+        left = false;
+    }
+    if(keyCode == RIGHT && (right == true)){
+        frog.turnToDir(90);
+        frog.moveX(75);
+        right = false;
+    }
+    if(key == ' '){
+        if(slide == 0){
+            slide = 1;
+            reset();
+        }
+        else if(slide == 2){
+            slide = 1;
+            reset();
+        }
+        else if (slide == 3){
+            slide = 1;
+            reset();
+        }
+    }
+}
+
+void keyReleased(){
+    up = true;
+    right = true;
+    down = true;
+    left = true;
+}
+
+void reset(){
+    shrinkTimer = 0;
+    lives = 3;
+    frog.setSize(75, 75);
+    frog.moveToPoint(400, 950);
+    frog.turnToDir(0);
+    cars.clear();
+    roads.clear();
+    speeds.clear();
+    coins.clear();
+    int a = 0;
+    while(a<coinSize){
+        addCoin();
+        a++;
+    }
+    makeRoad(1);
+    makeRoad(2);
+    makeRoad(3);
+    makeRoad(4);
+    makeRoad(5);
+    makeRoad(6);
+    makeRoad(7);
+    makeRoad(8);
+    makeRoad(9);
+    makeRoad(10);
+    // clear everything
+    
+}
+
+void startScreen(){
+    background(33, 7, 64);
+    textSize(40);
+    fill(5, 143, 0);
+    text("Welcome to FROGGER\n\n Use the arrow keys to move\n Press space to start\n Don't get run over!\n Choose the ground you want before you start \n don't worry, you can change this later", width/2, 200);
+    gravelButton.display();
+    roadButton.display();
+    fill(255);
+    textSize(40);
+    text("Gravel", gravelButton.getX(), gravelButton.getY()+12);
+    text("Road", roadButton.getX(), roadButton.getY()+11);
+    if(gravelButton.touchingPoint(mouseX, mouseY)){
+        gravelButton.setSize(210, 60);
+    }
+    if(!gravelButton.touchingPoint(mouseX, mouseY)){
+        gravelButton.setSize(200, 50);
+    }
+    if(roadButton.touchingPoint(mouseX, mouseY)){
+        roadButton.setSize(210, 60);
+    }
+    if(!roadButton.touchingPoint(mouseX, mouseY)){
+        roadButton.setSize(200, 50);
+    }
+    if(yesGravel){
+        gravelButton.setColor(0, 100, 0);
+        roadButton.setColor(100, 100, 100);
+    }
+    if(!yesGravel){
+        roadButton.setColor(0, 100, 0);
+        gravelButton.setColor(100, 100, 100);
+    }
+}
+
+void deathScreen(){
+    background(143, 0, 0);
+    gravelButton.display();
+    roadButton.display();
+    textSize(50);
+    fill(255);
+    text("You have run out of lives\n Press space to try again", width/2, height/2);
+    text("Gravel", gravelButton.getX(), gravelButton.getY()+12);
+    text("Road", roadButton.getX(), roadButton.getY()+11);
+    if(gravelButton.touchingPoint(mouseX, mouseY)){
+        gravelButton.setSize(210, 60);
+    }
+    if(!gravelButton.touchingPoint(mouseX, mouseY)){
+        gravelButton.setSize(200, 50);
+    }
+    if(roadButton.touchingPoint(mouseX, mouseY)){
+        roadButton.setSize(210, 60);
+    }
+    if(!roadButton.touchingPoint(mouseX, mouseY)){
+        roadButton.setSize(200, 50);
+    }
+    if(yesGravel){
+        gravelButton.setColor(0, 100, 0);
+        roadButton.setColor(100, 100, 100);
+    }
+    if(!yesGravel){
+        roadButton.setColor(0, 100, 0);
+        gravelButton.setColor(100, 100, 100);
+    }
+    
+}
+
+void winningScreen(){
+    background(0, 121, 148);
+    gravelButton.display();
+    roadButton.display();
+    textSize(50);
+    fill(255);
+    text("You won!\n Press space to play again", width/2, height/2);
+    text("Gravel", gravelButton.getX(), gravelButton.getY()+12);
+    text("Road", roadButton.getX(), roadButton.getY()+11);
+    if(gravelButton.touchingPoint(mouseX, mouseY)){
+        gravelButton.setSize(210, 60);
+    }
+    if(!gravelButton.touchingPoint(mouseX, mouseY)){
+        gravelButton.setSize(200, 50);
+    }
+    if(roadButton.touchingPoint(mouseX, mouseY)){
+        roadButton.setSize(210, 60);
+    }
+    if(!roadButton.touchingPoint(mouseX, mouseY)){
+        roadButton.setSize(200, 50);
+    }
+    if(yesGravel){
+        gravelButton.setColor(0, 100, 0);
+        roadButton.setColor(100, 100, 100);
+    }
+    if(!yesGravel){
+        roadButton.setColor(0, 100, 0);
+        gravelButton.setColor(100, 100, 100);
+    }
+}
+
+void displayLives(){
+    for(int i = 0; i<lives; i++){
+        image(f, 30+(i*60), 30, 50, 50);
+    }
+}
+
+void mousePressed(){
+    if(slide != 1){
+        if(gravelButton.touchingPoint(mouseX, mouseY)){
+            yesGravel = true;
+        }
+        if(roadButton.touchingPoint(mouseX, mouseY)){
+            yesGravel = false;
+        }
+    }
+}
