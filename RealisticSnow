@@ -1,0 +1,43 @@
+
+ArrayList<Sprite> rain = (new ArrayList());
+Integer timer = 0;
+
+
+
+void draw() {
+  fill(60, 114, 125, 120);
+  rect(320, 240, 640, 480);
+  
+  
+  timer = timer+1;
+  for( Sprite r : rain) {
+    r.display();
+    r.turn(6);
+    r.moveY((r.getW() / 2.5));
+    if (timer%4 == 0) {
+      r.moveX((random(-3, 3)));
+    }
+    if (r.getY() > 480) {
+      r.setY(0);
+      r.setX((random(0, 640)));
+    }
+  }
+  
+  if (timer%240 == 0) {
+    fill(255, 255, 255);
+    rect(320, 240, 640, 480);
+    
+    
+  }
+}
+
+
+void setup() {
+  while((rain.size() < 50)) {
+    Float y = random(3, 7);
+    Sprite s = new Sprite((random(0, 640)), (random(0, 480)), y, y);
+    s.setColor(255, 255, 255);
+    rain.add(s);
+  }
+  
+}
