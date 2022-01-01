@@ -1,0 +1,42 @@
+//arrays here
+int length = 100;//change this
+int[] xCoordinate = new int[length];
+int[] yCoordinate = new int[length];
+int[] snowSize = new int[length];
+
+void setup(){
+    
+    size(500, 700);
+    
+    for(int i = 0; i < length; i = i + 1){
+        xCoordinate[i] = (int)random(0, width);
+        yCoordinate[i] = (int)random(0, height);
+        
+        snowSize[i] = (int)random(5, 15);
+        
+    }
+}
+
+void draw(){
+    background(0);
+    colorMode(HSB);
+    
+    for(int i = 0; i<length; i = i + 1){
+        fill( yCoordinate[i]/3 , 255, 255);
+        
+        ellipse(xCoordinate[i], yCoordinate[i], snowSize[i], snowSize[i]);
+        
+        yCoordinate[i] = yCoordinate[i] + snowSize[i]/2;
+        
+        if(yCoordinate[i] > height){
+            yCoordinate[i] = 0;
+            xCoordinate[i] = (int)random(0, width);
+        }
+        
+        if(frameCount%7 == 0){
+            xCoordinate[i] = xCoordinate[i] + (int)random(-4, 4);
+        }
+        
+    }
+    
+}
