@@ -1,0 +1,57 @@
+float[] snowX = new float[50];
+float[] snowY = new float[50];
+float[] snowS = new float[50];
+String airplaneUrl = "https://cdn.shopify.com/s/files/1/0080/8372/products/tattly_airplane_peagreen_designs_00_1024x1024@2x.png?v=1564167332";
+PImage airplane;
+int planeX = 50;
+
+void setup(){
+    size(400, 800);
+    for(int i = 0; i < snowX.length; i = i + 1){
+        snowX[i] = random(0, width);
+        snowY[i] = random(0, height);
+        snowS[i] = random(2, 10);
+    }
+    airplane = loadImage(airplaneUrl);
+}
+
+void draw(){
+    background(0, 5, 31);
+    noStroke();
+    // MOON
+    fill(189, 211, 242);
+    ellipse(325, 75, 100, 100);
+    for(int i = 300; i > 100; i = i - 10){
+        fill(189, 211, 242, 8);
+        ellipse(325, 75, i, i);
+    }
+    
+    //SNOW
+    fill(255);
+    for(int i = 0; i<snowX.length; i = i + 1){
+        ellipse(snowX[i], snowY[i], snowS[i]+3, snowS[i]+3); // where we assign the size of the snow
+        snowY[i] = snowY[i] + snowS[i];   // making the snow move down with speed
+        if(snowY[i] > height){
+            snowY[i] = 0;
+            snowX[i] = random(0, width);
+            snowS[i] = random(2, 10);
+        }
+        if(frameCount%7 == 0){
+            snowX[i] = snowX[i] + random(-4, 4);
+        }
+    }
+    
+    //LAMP
+    fill(100);
+    rect(100, 600, 15, 200);
+    rect(100, 600, 50, 10);
+    for(int i = 50; i <= 140; i = i + 10){
+        fill(189, 211, 242, 10);
+        triangle(140, 610, i, 800, 300-i, 800);
+    }
+    image(airplane, planeX, 20, 60, 60);
+    planeX = planeX + 2;
+    if(planeX > width){
+        planeX = -60; // - width of the image
+    }
+}
