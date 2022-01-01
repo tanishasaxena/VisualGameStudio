@@ -1,0 +1,86 @@
+
+String url = "https://www.bakedbyrachel.com/wp-content/uploads/2016/09/threecheesepizza1_bakedbyrachel.jpg";
+Sprite s = new Sprite(url, 320, 240, 640, 480);
+String url2 = "https://m.media-amazon.com/images/M/MV5BOTMwMzM3Y2ItZjc4Ni00MDlkLThmOWUtYTk1ZjliNjEzYTUwXkEyXkFqcGdeQXVyNzU1NzE3NTg@._V1_CR0,45,480,270_AL_UX477_CR0,0,477,268_AL_.jpg";
+Sprite s2 = new Sprite(url2, 320, 240, 640, 480);
+String url3 = "https://ih1.redbubble.net/image.250191849.2121/st%2Csmall%2C215x235-pad%2C210x230%2Cf8f8f8.lite-1u1.jpg";
+Sprite s3 = new Sprite(url3, 320, 240, 640, 480);
+Integer slide = 0;
+Sprite fButton = new Sprite(600, 440, 35, 35);
+Sprite bButton = new Sprite(40, 440, 35, 35);
+
+
+
+void draw() {
+  if (slide == 0) {
+    slideOne();
+  }
+  if (slide == 1) {
+    slideTwo();
+  }
+  if (slide == 2) {
+    slideThree();
+  }
+  if (slide == 3) {
+    slideFour();
+  }
+  slide = abs(slide) % 4;
+  fButton.setColor(0, 255, 0);
+  fButton.display();
+  bButton.setColor(255, 255, 0);
+  bButton.display();
+}
+
+
+void slideOne() {
+  s.display();
+  fill(0, 150, 0);
+  text("curly fries", 320, 240);
+}
+
+
+void keyPressed() {
+  if (pressed("RIGHT")) {
+    slide = slide+1;
+  }
+  if (pressed("LEFT")) {
+    slide = slide-1;
+  }
+}
+
+
+void mousePressed() {
+  if (fButton.touchingPoint(mouseX, mouseY)) {
+    slide = slide+1;
+  }
+  if (bButton.touchingPoint(mouseX, mouseY)) {
+    slide = slide-1;
+  }
+}
+
+
+void slideTwo() {
+  s2.display();
+  fill(0, 0, 255);
+  text("shrimp", 320, 240);
+}
+
+
+void slideThree() {
+  s3.display();
+  fill(255, 0, 0);
+  text("arms sales", 320, 240);
+}
+
+
+void slideFour() {
+  strokeWeight(5);
+  stroke(104, 171, 166);
+  line(mouseX, mouseY, pmouseX, pmouseY);
+  stroke(191, 154, 219);
+  line(640-mouseX, mouseY, 640-pmouseX, pmouseY);
+  stroke(240, 173, 209);
+  line(mouseX, 480-mouseY, pmouseX, 480-pmouseY);
+  stroke(245, 227, 147);
+  line(640-mouseX, 480-mouseY, 640-pmouseX, 480-pmouseY);
+}
