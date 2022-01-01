@@ -1,0 +1,27 @@
+
+boolean isFlipped = false;
+
+void setup(){
+    size(600, 600);
+    rectMode(CENTER);
+}
+
+void draw(){
+    background(50);
+    if(isFlipped == false){
+        fill(255, 255, 255);
+    }
+    if(isFlipped == true){
+        fill(255, 0, 0);
+    }
+    rect(300, 300, 100, 200);
+}
+
+void mousePressed(){
+    // potential: add if statement to say if the mouse has clicked ON THE CARD
+    // mouseX, mouseY
+    
+    if(mouseX < 200){
+        isFlipped = !isFlipped;
+    }
+}
