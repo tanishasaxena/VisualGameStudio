@@ -1,0 +1,134 @@
+String typing = "";
+String typed = "";
+
+float mSpeed = 2;
+
+int level = 0;
+
+ArrayList<Meteor> rocks = new ArrayList<>();
+
+String[] lvlOneWords = {"cat", "dog", "sit", "way", "cake", "moon", "look"};
+String[] lvlTwoWords = {"mixed", "given", "paper", "seven", "jacket", "piano", "curtain"};
+String[] lvlThreeWords = {"academy", "discover", "coconut", "lightbulb", "regular", "fireplace", "potato"};
+String[][] allWords = {lvlOneWords, lvlTwoWords, lvlThreeWords};
+
+boolean pause = false;
+
+void setup(){
+    size(600, 600);
+    textAlign(CENTER, CENTER);
+}
+
+void draw(){
+    background(0);
+    fill(255);
+    textSize(15);
+    text("press shift -> p\nto pause the game", 70, 25);
+    typingControls();
+    meteorControls();
+    levelControls();
+}
+
+// displaying what is being typed
+void typingControls(){
+    stroke(255, 0, 0);
+    strokeWeight(5);
+    line(0, height-55, width, height-55);
+    textSize(30);
+    fill(255);
+    text(typing, width/2, height-30);
+}
+
+void levelControls(){
+    if((frameCount%600 == 0) && (level < allWords.length-1)){
+        level++;
+    }
+}
+
+// displaying, making, and creating the meteors
+void meteorControls(){
+    Meteor r = new Meteor();
+    
+    // displaying what exists
+    for(Meteor m : rocks){
+        if(!pause){
+            m.move();
+        }
+        m.display();
+        if(m.getWord().equals(typed)) r = m;
+    }
+    
+    // removing what was typed
+    rocks.remove(r);
+    typed = "";
+    
+    
+    // adding a new meteor
+    if(!pause && frameCount%(120-(level*10)) == 0){
+        String s = allWords[level][(int)random(0, allWords[0].length)];
+        Meteor m = new Meteor(s, mSpeed, random(10, width-(s.length()*10)), -20);
+        rocks.add(m);
+    }
+}
+
+void reset(){
+    typing = "";
+    typed = "";
+    rocks.clear();
+    level = 0;
+    mSpeed = 2;
+}
+
+void keyPressed(){
+    if(!pause){
+        if(key == BACKSPACE){
+            typing = typing.substring(0, typing.length()-1);
+        }
+        else if (key == ENTER){
+            typed = typing;
+            typing = "";
+        }
+        else if(key >= 'a' && key <= 'z'){
+            Character c = key;
+            typing = typing + c;
+        }
+    }
+    if(key == 'P'){
+        pause = !pause;
+    }
+}
+
+class Meteor{
+    String word;
+    float speed, xPos, yPos;
+    
+    Meteor(){
+        this.word = "";
+        this.speed = 0;
+    }
+    
+    Meteor(String w, float s, float x, float y){
+        this.word = w;
+        this.speed = s;
+        this.xPos = x;
+        this.yPos = y;
+    }
+    
+    void display(){
+        int wid = this.word.length() * 20;
+        fill(255);
+        noStroke();
+        ellipse(this.xPos, this.yPos, wid, 40);
+        textSize(30);
+        fill(0);
+        text(this.word, this.xPos, this.yPos);
+    }
+    
+    void move(){
+        this.yPos = this.yPos + this.speed;
+    }
+    
+    String getWord(){
+        return this.word;
+    }
+}
