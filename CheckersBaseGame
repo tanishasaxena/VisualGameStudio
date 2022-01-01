@@ -1,0 +1,124 @@
+int colorCont = 0;
+int[] hues = new int[32];
+ArrayList<Piece> pieces = new ArrayList<>();
+Piece picked;
+
+void setup(){
+    size(800, 800);
+    noStroke();
+    colorMode(HSB);
+    pieces.add(new Piece(0, 0));
+}
+
+void draw(){
+    drawBoard();
+    displayPieces();
+    movePicked();
+}
+
+void movePicked(){
+    if(picked!=null){
+        picked.snap(mouseX, mouseY);
+    }
+}
+
+void mousePressed(){
+    setPicked();
+}
+
+void mouseReleased(){
+    if(picked != null){
+        picked.snap(mouseX, mouseY);
+        picked = null;
+    }
+}
+
+void setPicked(){
+    for(Piece p : pieces){
+        int px = (p.c*100)+50;
+        int py = (p.r*100)+50;
+        // if dist to center of piece is less than its radius
+        if ((Math.pow((mouseX-px), 2) + Math.pow((mouseY-py), 2)) < Math.pow(p.radius, 2)){
+            picked = p;
+            println("picked in row: " + p.r + " col: " + p.c);
+        }
+    }
+}
+
+void displayPieces(){
+    for(Piece p : pieces) p.display();
+}
+
+void setColor(int i, int j){
+    if((i+j)%2 == 1){
+        fill(0);
+    }
+    else{
+        fill(colorCont, 225, 200);
+        colorCont = colorCont + 8;
+    }
+}
+
+void drawBoard(){
+    background(0);
+    for(int i = 0; i<8; i++){
+        for(int j = 0; j<8; j++){
+            setColor(i, j);
+            
+            rect(i*100, j*100, 100, 100, 20);
+        }
+    }
+    colorCont = 0;
+}
+
+class Piece{
+    int c;
+    int r;
+    int radius;
+    
+    Piece(){
+        c = 0;
+        r = 0;
+        radius = 50;
+    }
+    
+    Piece(int a, int b){
+        this.c = a;
+        this.r = b;
+        radius = 50;
+    }
+    
+    void display(){
+        fill(255);
+        ellipse((c*100)+50, (r*100)+50, 2*radius, 2*radius);
+    }
+    
+    // TODO: fix snap-to-grid
+    void snap(float x, float y){
+        float row = y/100;
+        int rowInt = (int)row;
+        float col = x/100;
+        int colInt = (int)col;
+        
+        if(row-rowInt >= 0.8){
+            r = rowInt+1;
+        }
+        else{
+            r = rowInt;
+        }
+        
+        if(col-colInt > 0.8){
+            c = colInt+1;
+        }
+        else{
+            c = colInt;
+        }
+        
+        if(row > 7){
+            r = 7;
+        }
+        if(col > 7){
+            c = 7;
+        }
+    }
+}
