@@ -1,0 +1,41 @@
+ArrayList<Sprite> rain = (new ArrayList());
+ArrayList<Sprite> clouds = (new ArrayList());
+
+
+void draw() {
+  background(150, 150, 150);
+  for( Sprite r : rain) {
+    r.display();
+    r.moveY(3);
+    if (r.getY() > 481.5) {
+      r.setY(0);
+      r.setX((random(0, 640)));
+    }
+  }
+  
+  for( Sprite c : clouds) {
+    c.display();
+    c.moveX(10);
+    if (c.getX() > 650) {
+      c.setY((random(0, 100)));
+      c.setX(0);
+    }
+  }
+  
+}
+
+
+void setup() {
+  while((rain.size() < 100)) {
+    Sprite s = new Sprite((random(0, 640)), (random(0, 480)), 3, 3);
+    s.setColor(0, 0, 255);
+    rain.add(s);
+  }
+  
+  while((clouds.size() < 20)) {
+    Sprite s = new Sprite("https://purepng.com/public/uploads/large/11498493571qdikf8k49uogdl7steagkmhic6kvjidf2rf5ga0shxskr9xztcke16a9mdpkns3gloegtowd2ckyg0vk24x1w1pcofyzokcrx1v4.png", (random(0, 640)), (random(0, 100)), 100, 50);
+    s.setColor(255, 255, 255);
+    clouds.add(s);
+  }
+  
+}
