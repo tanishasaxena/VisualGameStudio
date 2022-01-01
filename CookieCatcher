@@ -1,0 +1,97 @@
+Sprite catcher = new Sprite("http://hoyleplay.com/wp-content/uploads/2017/07/pig-e1502294240169.png", 300, 750, 125, 80);
+Sprite tear = new Sprite("https://ui-ex.com/images/tear-transparent-6.png", 300, 755, 20, 20);
+boolean left = false;
+boolean right = false;
+int catcherSpeed = 7;
+int cookiesSpeed = 4;
+int hammerSpeed = 4;
+int score = 0;
+int brTimer = 0;
+ArrayList<Sprite> cookies = new ArrayList<>();
+ArrayList<Sprite> hammers = new ArrayList<>();
+
+void setup(){
+    size(600, 800);
+    catcher.setColor(255, 255, 255);
+}
+
+void draw(){
+    background(50);
+    tear.setX(catcher.getX()+36);
+    catcher.display();
+    if(brTimer>0) tear.display();
+    catcherControls();
+    cookieControls();
+    hammerControls();
+    if(frameCount%30 == 0){
+        if(random(0, 5) < 1){
+            addHammer();
+        }
+        else{
+            addCookie();
+        }
+    }
+    textSize(40);
+    fill(255);
+    text("$"+ score/100 + "." + score%100, 30, 75);
+    brTimer--;
+}
+
+void cookieControls(){
+    for(Sprite c : cookies){
+        c.display();
+        c.moveY(cookiesSpeed);
+        // removing the coins
+        if(c.touchingSprite(catcher)){
+            cookies.remove(c);
+            score+=10;
+        }
+        if(c.getY() > height) cookies.remove(c);
+    }
+}
+
+void hammerControls(){
+    for(Sprite h: hammers){
+        h.display();
+        h.moveY(hammerSpeed);
+        if(h.touchingSprite(catcher)){
+            hammers.remove(h);
+            brTimer = 30;
+            score=0;
+        }
+    }
+}
+
+void catcherControls(){
+    //movement
+    if(right) catcher.moveX(catcherSpeed);
+    if(left) catcher.moveX(-catcherSpeed);
+    // restrictions
+    if(catcher.getX() < 78) catcher.setX(78);
+    if(catcher.getX() > 522) catcher.setX(522);
+}
+
+void keyPressed(){
+    if(keyCode == RIGHT){
+        right = true;
+    }
+    if(keyCode == LEFT){
+        left = true;
+    }
+}
+
+void keyReleased(){
+    if(keyCode == RIGHT){
+        right = false;
+    }
+    if(keyCode == LEFT){
+        left = false;
+    }
+}
+
+void addCookie(){
+    cookies.add(new Sprite("https://images-na.ssl-images-amazon.com/images/I/41uzsHhpdTL.png", random(0, width), 0, 40, 40));
+}
+void addHammer(){
+    hammers.add(new Sprite("https://bardoloi.github.io/assets/hammer-safe/hammer.png", random(0, width), 0, 70, 40));
+}
