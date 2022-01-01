@@ -1,0 +1,156 @@
+Sprite rightPaddle = new Sprite(600, 240, 25, 150);
+Sprite leftPaddle = new Sprite(40, 240, 25, 150);
+Sprite puck = new Sprite(320, 240, 15, 15);
+Integer rightScore = 0;
+Integer leftScore = 0;
+
+
+void leftPaddleControls() {
+  leftPaddle.display();
+  if (pressed("w")) {
+    leftPaddle.moveY(-8);
+  }
+  if (pressed("s")) {
+    leftPaddle.moveY(8);
+  }
+  if (leftPaddle.getY() < 75) {
+    leftPaddle.setY(75);
+  }
+  if (leftPaddle.getY() > 405) {
+    leftPaddle.setY(405);
+  }
+}
+
+void puckControl() {
+  puck.display();
+  puck.forward(15);
+  if (leftPaddle.touchingSprite(puck)) {
+    puck.flipX();
+    puck.moveX(10);
+  }
+  if (rightPaddle.touchingSprite(puck)) {
+    puck.flipX();
+    puck.moveX(-10);
+  }
+  if (puck.getY() < 0) {
+    puck.flipY();
+  }
+  if (puck.getY() > 480) {
+    puck.flipY();
+  }
+}
+
+
+void resetPuck() {
+  puck.moveToPoint(320, 240);
+  puck.turnToDir((random(10, 65)));
+  if (random(0, 2) < 1) {
+    puck.flipX();
+  }
+  if (random(0, 2) < 1) {
+    puck.flipY();
+  }
+}
+
+
+void draw() {
+  multiplayer();
+}
+
+
+void displayScore() {
+  textSize(30);
+  fill(0, 0, 0);
+  text(rightScore, 600, 30);
+  text(leftScore, 40, 30);
+}
+
+
+void setup() {
+  resetPuck();
+}
+
+
+void rightPaddleControls() {
+  rightPaddle.display();
+  if (pressed("UP")) {
+    rightPaddle.moveY(-8);
+  }
+  if (pressed("DOWN")) {
+    rightPaddle.moveY(8);
+  }
+  if (rightPaddle.getY() < 75) {
+    rightPaddle.setY(75);
+  }
+  if (rightPaddle.getY() > 405) {
+    rightPaddle.setY(405);
+  }
+}
+
+
+void leftPaddleAI() {
+  leftPaddle.display();
+  leftPaddle.setY(puck.getY());
+}
+
+
+void leftPaddleAI2() {
+  leftPaddle.display();
+  if (leftPaddle.getY() < puck.getY()) {
+    leftPaddle.moveY(1);
+  }
+  if (leftPaddle.getY() > puck.getY()) {
+    leftPaddle.moveY(-1);
+  }
+}
+
+
+void multiplayer() {
+  background(255, 255, 255);
+  displayScore();
+  rightPaddleControls();
+  leftPaddleControls();
+  puckControl();
+  if (puck.getX() > 640) {
+    resetPuck();
+    leftScore = leftScore + 1;
+  }
+  if (puck.getX() < 0) {
+    resetPuck();
+    rightScore = rightScore + 1;
+  }
+}
+
+void singlePlayerHard() {
+  background(255, 255, 255);
+  displayScore();
+  rightPaddleControls();
+  leftPaddleAI();
+  puckControl();
+  if (puck.getX() > 640) {
+    resetPuck();
+    leftScore = leftScore + 1;
+  }
+  if (puck.getX() < 0) {
+    resetPuck();
+    rightScore = rightScore + 1;
+  }
+}
+
+
+void singlePlayerEasy() {
+  background(255, 255, 255);
+  displayScore();
+  rightPaddleControls();
+  leftPaddleAI2();
+  puckControl();
+  if (puck.getX() > 640) {
+    resetPuck();
+    leftScore = leftScore + 1; // set leftScore to: leftScore + 1
+  }
+  if (puck.getX() < 0) {
+    resetPuck();
+    rightScore = rightScore + 1;
+  }
+}
+
