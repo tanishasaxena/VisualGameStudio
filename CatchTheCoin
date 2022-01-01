@@ -1,0 +1,109 @@
+// GLOBAL VARIABLES
+String logUrl = "http://img.clipartlook.com/wooden-log-clipart-1-big-image-png-log-clip-art-1871_689.png";
+Sprite player = new Sprite(logUrl, 200, 475, 80, 30);
+boolean left, right;
+int score = 0;
+ArrayList<Sprite> goodStuff = new ArrayList<>();
+int hp = 150;
+int slide = 0;
+
+
+void setup(){
+    size(400, 500);
+    addGood();
+    textAlign(CENTER);
+}
+
+void draw(){
+    colorMode(HSB);
+    if(slide == 0){
+        background(173, 61, 73);
+        playerControls();
+        goodStuffControls();
+        textSize(15);
+        fill(255);
+        text(score, 15, 25);
+        noStroke();
+        fill(hp-10, 255, 255);
+        rect(375, 10, 15, hp);
+    }
+    if(slide == 1){
+        background(0);
+        textSize(20);
+        fill(255);
+        text("You Lost", 200, 250);
+        text("Your Score Was: " + score, 200, 275);
+        text("Click to restart", 200, 300);
+    }
+}
+
+void goodStuffControls(){
+    if(frameCount%30 == 0){
+        addGood();
+    }
+    for(Sprite g : goodStuff){
+        g.display();
+        g.moveY(2);
+        if(g.touchingSprite(player)){
+            goodStuff.remove(g);
+            score = score + 10;
+        }
+        if(g.getY() > height){
+            goodStuff.remove(g);
+            hp = hp - 10;
+        }
+    }
+}
+
+void addGood(){
+    String goodUrl = "https://mario.wiki.gallery/images/thumb/f/f7/NSMBU_Starcoin_Artwork.png/1200px-NSMBU_Starcoin_Artwork.png";
+    Sprite s = new Sprite(goodUrl, random(0, width), 0, 10, 10);
+    goodStuff.add(s);
+}
+
+void playerControls(){
+    player.display();
+    if(right == true){
+        player.moveX(5);
+    }
+    if(left == true){
+        player.moveX(-5);
+    }
+    if(player.getX() > width){
+        player.setX(width);
+    }
+    if(player.getX() < 0){
+        player.setX(0);
+    }
+    if(hp <= 0){
+        slide = 1;
+    }
+}
+
+void keyPressed(){
+    if(keyCode == RIGHT){
+        right = true;
+    }
+    if(keyCode == LEFT){
+        left = true;
+    }
+}
+
+void keyReleased(){
+    if(keyCode == RIGHT){
+        right = false;
+    }
+    if(keyCode == LEFT){
+        left = false;
+    }
+}
+
+void mousePressed(){
+    if(slide == 1){
+        slide = 0;
+        goodStuff.clear();
+        hp = 150;
+        score = 0;
+        player.setX(200);
+    }
+}
