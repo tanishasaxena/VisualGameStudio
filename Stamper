@@ -1,0 +1,36 @@
+
+ArrayList<Sprite> stamps = (new ArrayList());
+Integer counter = 0;
+String bgUrl = "https://thumbor.forbes.com/thumbor/960x0/https%3A%2F%2Fspecials-images.forbesimg.com%2Fdam%2Fimageserve%2F765877054%2F960x0.jpg%3Ffit%3Dscale";
+Sprite bg = new Sprite(bgUrl, 320, 240, 640, 480);
+
+
+void draw() {
+  background(0, 0, 0);
+  bg.display();
+  for( Sprite stamp : stamps) {
+    stamp.display();
+    if (pressed("UP")) {
+      stamp.turn(2);
+    }
+    if (pressed("DOWN")) {
+      stamp.turn(-2);
+    }
+  }
+  
+}
+
+
+void mousePressed() {
+  if (counter == 0) {
+    String url = "https://constellation.standuptocancer.org/assets/star-facbd92545e601590a94bd3fd813f643.png";
+    Sprite s = new Sprite(url, mouseX, mouseY, 50, 50);
+    stamps.add(s);
+  } else if (counter == 1) {
+    String url = "https://pachamamayogaretreats.com/wp-content/uploads/2019/01/milky-way-2.png";
+    Sprite s = new Sprite(url, mouseX, mouseY, 125, 75);
+    stamps.add(s);
+  }
+  counter = (counter+1)%2;
+}
+
