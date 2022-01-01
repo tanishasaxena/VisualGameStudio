@@ -1,0 +1,229 @@
+Sprite player = new Sprite(400, 400, 40, 40);
+Sprite follower = new Sprite(30, 30, 40, 40);
+ArrayList<Sprite> food = new ArrayList<>();
+ArrayList<Sprite> fire = new ArrayList<>();
+ArrayList<Sprite> walls = new ArrayList<>();
+Sprite closestFood;
+int playerSpeed = 3;
+int enemySpeed = 2;
+int enemyRange = 250;
+int foodSpeed = 2;
+int foodSize = 10;
+int score = 0;
+int slide = 1;
+float tx, ty;
+
+void setup(){
+    size(800, 800);
+    player.setColor(125, 125, 125);
+    follower.setColor(125, 0, 0);
+    reset();
+    for(int i = 0; i<3; i++){
+        addWall();
+    }
+
+}
+
+void draw(){
+    if(slide == 0){
+        startScreen();
+    }
+    if(slide == 1){
+        background(50);
+        playerControls();
+        foodControls();
+        fireControls();
+        followerControls();
+        wallControls();
+        textSize(40);
+        fill(255);
+        text(score, 725, 75);
+    }
+    if(slide == 2){
+        deathScreen();
+    }
+    if(slide == 3){
+        winningScreen();
+    }
+}
+
+void wallControls(){
+    for(Sprite w : walls){
+        w.display();
+        if(w.touchingSprite(player)){
+            player.forward(-playerSpeed);
+            tx = -1;
+            ty = -1;
+        }
+    }
+}
+
+void addWall(){
+    Sprite w = new Sprite(random(width), random(height), random(50, 200), 10);
+    w.setColor(0, 255, 255);
+    w.turn(random(0, 360));
+    walls.add(w);
+}
+
+// TODO: Death detection
+void playerControls(){
+    player.turnToPoint(tx, ty);
+    if(tx > 0){
+        player.forward(playerSpeed);
+        fill(168, 50, 104, 120);
+        strokeWeight(5);
+        stroke(168, 50, 104, 120);
+        line(tx, ty, player.getX(), player.getY());
+        noStroke();
+        ellipse(tx, ty, 50, 50);
+    }
+    if(dist(player.getX(), player.getY(), tx, ty) < 3){
+        tx = -1;
+        ty = -1;
+    }
+    if(player.touchingSprite(follower)){
+        slide = 2;
+    }
+    player.display();
+}
+
+void followerControls(){
+    follower.display();
+    fill(125, 0, 0, 70);
+    noStroke();
+    ellipse(follower.getX(), follower.getY(), enemyRange*2, enemyRange*2);
+    if(follower.distTo(player) < enemyRange){
+        follower.turnToSprite(player);
+        follower.forward(enemySpeed);
+    }
+    else if(food.size() == 0){ // if  is no more food 
+        follower.turnToSprite(player);
+        follower.forward(enemySpeed);
+    }
+    else{ // turn the follower to the closest food
+        follower.turnToSprite(closestFood);
+        follower.forward(enemySpeed);
+    }
+    if(random(0, 1) < 0.03){ // chance of adding fire
+        addFire();
+    }
+}
+
+void foodControls(){
+    closestFood = food.get(0);
+    for(Sprite f : food){
+        f.display();
+        f.forward(foodSpeed);
+        if(player.touchingSprite(f)){
+            score+=10;
+            food.remove(f);
+        }
+        if(player.distTo(closestFood) > player.distTo(f)){
+            closestFood = f;
+        }
+        if(f.getX() < 0 || f.getX() > width){
+            f.flipX();
+        }
+        if(f.getY() < 0 || f.getY() > height){
+            f.flipY();
+        }
+    }
+}
+
+void fireControls(){
+    for(Sprite f : fire){
+        f.display();
+        f.setSize(f.getW()-0.25, f.getH()-0.25);
+        if(f.getW() <= 0){
+            fire.remove(f);
+        }
+        if(player.touchingSprite(f)){
+            score = 0;
+        }
+    }
+}
+
+void addFood(){
+    Sprite s = new Sprite(random(0, width), random(0, height), 20, 20);
+    s.setColor(255, 210, 0);
+    s.turnToDir(random(0, 360));
+    food.add(s);
+}
+
+void addFire(){
+    Sprite b = new Sprite(follower.getX(), follower.getY(), 50, 50);
+    b.setColor(255, 100, 0);
+    fire.add(b);
+}
+
+void startScreen(){
+    background(50);
+    textSize(50);
+    textAlign(CENTER);
+    fill(255);
+    text("Welcome to CHASE", 400, 400);
+    textSize(27);
+    text("The player moves towards wherever the mouse clicks", 400, 440);
+    text("Try to collect all the coins", 400, 480);
+    text("But be careful; Don't hit the enemy or the fire or you will BURN", 400, 520);
+}
+
+void deathScreen(){
+    background(75, 0, 0);
+    textSize(50);
+    textAlign(CENTER);
+    fill(255);
+    text("You have been toasted", 400, 400);
+    textSize(40);
+    text("Press space to try again", 400, 450);
+}
+
+void winningScreen(){
+    background(0, 155, 100);
+    textSize(50);
+    textAlign(CENTER);
+    fill(255);
+    text("You survived!", 400, 400);
+    textSize(40);
+    text("Press space to go to the next level", 400, 450);
+}
+
+void reset(){
+    food.clear();
+    fire.clear();
+    int a = 0;
+    while(a<foodSize){
+        addFood();
+        a++;
+    }
+    score = 0;
+    follower.moveToPoint(50, 50);
+    player.moveToPoint(width-50, height-50);
+}
+
+void mousePressed(){
+    tx = mouseX;
+    ty = mouseY;
+}
+
+void keyPressed(){
+    if(key == ' '){
+        if(slide == 2){
+            enemySpeed = 2;
+            playerSpeed = 3;
+            foodSize = 10;
+            enemyRange = 250;
+            slide = 1; 
+            reset();
+        }
+        else if(slide == 3){
+            enemySpeed++;
+            playerSpeed++;
+            foodSize+=5;
+            enemyRange+=10;
+            slide = 1;
+            reset();
+            
+        }
+    }
+}
