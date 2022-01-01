@@ -1,0 +1,95 @@
+
+ArrayList<Sprite> rain = (new ArrayList());
+ArrayList<String> urls = (new ArrayList());
+String url = "https://www.rehabmart.com/images_html2/Omnimed/264627_basket.png";
+Sprite s = new Sprite(url, 320, 455, 50, 50);
+Integer size = 20;
+Integer speed = 8;
+Integer timer = 0;
+Integer score = 0;
+
+
+void draw() {
+  background(255, 255, 255);
+  timer = timer+1;
+  fill(0, 0, 0);
+  text(score, 600, 50);
+  rainControls();
+  addingRain();
+  difficulty();
+  playerControl();
+  catching();
+}
+
+
+void catching() {
+  for( Sprite f : rain) {
+    if (f.touchingSprite(s)) {
+      score = score+1;
+    }
+  }
+  
+}
+
+
+void rainControls() {
+  for( Sprite s : rain) {
+    s.display();
+    s.moveY(speed);
+    if (s.getY() > 505) {
+      Integer x = int(random(0, urls.size()));
+      rain.remove(s);
+      rain.add((new Sprite((urls.get(x)), (random(0, 640)), (random(-200, -25)), 50, 50)));
+      s.setY(-25);
+      s.setX((random(0, 640)));
+    }
+  }
+  
+}
+
+
+void addingRain() {
+  if (rain.size() < size) {
+    Integer x = int(random(0, urls.size()));
+    rain.add((new Sprite((urls.get(x)), (random(0, 640)), (random(-200, -25)), 50, 50)));
+  }
+}
+
+
+void difficulty() {
+  if (timer%300 == 0) {
+    size = size+1;
+    speed = speed + 1;
+  }
+}
+
+
+void playerControl() {
+  s.display();
+  if (pressed("LEFT")) {
+    s.moveX(-50);
+  }
+  if (pressed("RIGHT")) {
+    s.moveX(50);
+  }
+  if (s.getX() > 640) {
+    s.setX(615);
+  }
+  if (s.getX() < 0) {
+    s.setX(25);
+  }
+}
+
+
+void setup() {
+  urls.add("http://www.clker.com/cliparts/I/T/5/5/0/Z/flower-cartoon-pink-hi.png");
+  urls.add("http://www.clker.com/cliparts/B/4/f/m/1/5/flower-cartoon-pink-md.png");
+  urls.add("http://www.clker.com/cliparts/c/e/v/g/5/g/flower-cartoon-red-md.png");
+  urls.add("http://www.clker.com/cliparts/3/h/u/I/z/t/flower-cartoon-green-hi.png");
+  urls.add("http://clipart-library.com/images/6Tr5aKXnc.png");
+  while((rain.size() < size)) {
+    rain.add((new Sprite((urls.get((int(random(0, urls.size()))))), (random(0, 640)), (random(-200, -25)), 50, 50)));
+  }
+  
+}
+
