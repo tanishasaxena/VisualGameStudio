@@ -1,0 +1,24 @@
+
+Integer off = 10;
+
+
+
+void setup() {
+}
+
+
+void draw() {
+  background(0, 0, 0);
+  fill(0, 0, 0);
+  Integer x = 10;
+  while((x < 640)) {
+    colorMode(HSB);
+    stroke(abs(x-off)%255, 255, 255);
+    line(0, x, x, 480);
+    line(x, 0, 640, x);
+    ellipse(300, 260, 200-x, 200-x);
+    x = x+1+mouseX/5;
+  }
+  
+  off = off+5;
+}
