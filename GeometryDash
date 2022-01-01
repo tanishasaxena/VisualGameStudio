@@ -1,0 +1,235 @@
+
+String backUrl = "https://videohive.img.customer.envatousercontent.com/files/231643221/preview.jpg?auto=compress%2Cformat&fit=crop&crop=top&max-h=8000&max-w=590&s=566e2865b61ee7ab916ca1aa63f680eb";
+Sprite back = new Sprite(backUrl, 400, 250, 800, 500);
+Sprite floor = new Sprite(400, 425, 800, 14);
+Sprite player = new Sprite(125, 395, 50, 50);
+Float grav = 0.0;
+Float speed = -5.0;
+ArrayList<Sprite> enemies = (new ArrayList());
+ArrayList<Sprite> floors = (new ArrayList());
+Integer stage = 1;
+Sprite startButton = new Sprite(400, 300, 100, 50);
+
+
+
+void setupLevelOne() {
+  floor.setColor(255, 255, 255);
+  player.setColor(255, 255, 255);
+  addEnemy(850, 395);
+  addEnemy(1150, 395);
+  addEnemy(1200, 395);
+  floors.add((new Sprite(1700, 395, 200, 50)));
+  addEnemy(1770, 345);
+  floors.add((new Sprite(2500, 395, 200, 50)));
+  floors.add((new Sprite(2800, 295, 200, 50)));
+  addEnemy(2550, 345);
+  floors.add((new Sprite(3150, 395, 200, 50)));
+  addEnemy(3225, 345);
+  floors.add((new Sprite(3600, 395, 75, 50)));
+  floors.add((new Sprite(3800, 295, 75, 50)));
+  floors.add((new Sprite(4000, 195, 75, 50)));
+  addEnemy(3700, 395);
+  addEnemy(3750, 395);
+  addEnemy(3800, 395);
+  addEnemy(3850, 395);
+  addEnemy(3900, 395);
+  addEnemy(3950, 395);
+  addEnemy(4000, 395);
+  addEnemy(4300, 395);
+  addEnemy(4350, 395);
+  addEnemy(4500, 395);
+  addEnemy(4550, 395);
+  addEnemy(4600, 395);
+  floors.add((new Sprite(5000, 395, 250, 50)));
+  floors.add((new Sprite(5000, 200, 250, 50)));
+  addEnemy(5150, 395);
+  addEnemy(5200, 395);
+  addEnemy(5250, 395);
+  addEnemy(5300, 395);
+}
+
+
+void addEnemy(int s, int y) {
+  enemies.add((new Sprite("http://www.clker.com/cliparts/P/1/h/u/d/k/upright-white-triangle-hi.png", s, y, 50, 50)));
+}
+
+
+void draw() {
+  if (stage == 0) {
+    back.display();
+    gravControls();
+    floorControls();
+    playerControls();
+    enemyControls();
+    floorCollision();
+  } else if (stage == 1) {
+    startScreen();
+  } else if (stage == 2) {
+    endScreen();
+  } else if (stage == 3) {
+    winningScreen();
+  }
+}
+
+
+void setup() {
+  size(800, 500);
+}
+
+
+void keyPressed() {
+  if ((stage == 1 || stage == 2 || stage == 3) && pressed(" ")) {
+    floors.clear();
+    enemies.clear();
+    setupLevelOne();
+    stage = 0; // set stage to: 0
+  }
+}
+
+
+void mousePressed() {
+  if (startButton.touchingPoint(mouseX, mouseY)) {
+    floors.clear();
+    enemies.clear();
+    setupLevelOne();
+    stage = 0; // set stage to: 0
+  }
+}
+
+
+void gravControls() {
+  grav = grav+0.6;
+}
+
+
+void temporaryPlayerMovement() {
+  if (pressed("RIGHT")) {
+    player.moveX(5);
+  }
+  if (pressed("LEFT")) {
+    player.moveX(-5);
+  }
+}
+
+
+void startScreen() {
+  back.display(); 
+  startButton.setColor(255, 255, 255);
+  startButton.display(); 
+  textSize(50); 
+  text("Rip Off Geometry Dash", 400, 150);
+  textSize(20);
+  text("but shorter", 400, 180);
+  textSize(30);
+  text("click or press space to restart", 400, 220);
+  fill(0, 0, 0);
+  text("start", 400, 300);
+  fill(255, 255, 255);
+  text("press the 'up' arrow to jump", 400, 350);
+  text("don't touch the spikes", 400, 380);
+  text("try not to crash into platforms", 400, 410);
+  text("good luck!", 400, 440);
+}
+
+
+void endScreen() {
+  back.display();
+  startButton.setColor(255, 255, 255);
+  startButton.display();
+  textSize(30);
+  fill(0, 0, 0);
+  text("retry", 400, 300);
+  fill(255, 255, 255);
+  text("click or press space to restart", 400, 375);
+}
+
+
+void enemyControls() {
+  for( Sprite e : enemies) {
+    e.display();
+    e.moveX(speed);
+    PVector a = new PVector (0, -20);
+    PVector b = new PVector (10, -25);
+    PVector c = new PVector (10, 25);
+    PVector[] vect = {a, b, c};
+    e.setHitboxPoints(vect);
+    if (player.touchingSprite(e)) {
+      stage = 2; // set stage to: 2
+    }
+    if (e.getX() < -25) {
+      enemies.remove(e);
+    }
+  }
+  
+}
+
+
+void floorControls() {
+  floor.display();
+  for( Sprite f : floors) {
+    f.setColor(255, 255, 255);
+    f.display();
+    f.moveX(speed);
+    if (f.getX() < -(f.getW()/2)) {
+      floors.remove(f);
+    }
+  }
+  
+}
+
+void winningScreen() {
+  back.display();
+  startButton.setColor(255, 255, 255);
+  startButton.display();
+  textSize(50);
+  fill(255, 255, 255);
+  text("you won!", 400, 225);
+  textSize(30);
+  text("click or press space to restart", 400, 360);
+  fill(0, 0, 0);
+  textSize(20);
+  text("play again", 400, 300);
+}
+
+void floorCollision() {
+  for( Sprite f : floors) {
+    if (player.getX()+(player.getW()/2) > f.getX()-(f.getW()/2) && player.getY()+(player.getH()/2) > f.getY()-(f.getH()/2)+5 && player.getX()-(player.getW()/2) < f.getX()+(f.getW()/2) && !(player.getY()+(player.getH()/2) >= f.getY()+(f.getH()/2))) {
+      stage = 2;
+    }
+  }
+  
+}
+
+void playerControls() {
+  player.display();
+  player.moveY(grav);
+  if (player.touchingSprite(floor)) {
+    grav = 0.0; // set grav to: 0.0
+    player.setY(floor.getY()-(floor.getH()/2)-(player.getH()/2)+1);
+    player.turnToPoint(125, 500);
+  }
+  for( Sprite f : floors) {
+    if (player.getX()+(player.getW()/2)-5 > f.getX()-(f.getW()/2) && player.getX()-(player.getW()/2) < f.getX()+(f.getW()/2) && player.getY()+(player.getH()/2) >= f.getY()-(f.getH()/2)-1 && !(player.getY()+(player.getH()/2) >= f.getY()+(f.getH()/2))) {
+      grav = 0.0;
+      player.setY(f.getY()-(f.getH()/2)-(player.getH()/2)+1);
+      player.turnToPoint(125, 500);
+    }
+  }
+  
+  if (pressed("UP") && player.touchingSprite(floor)) {
+    grav = -14.0;
+  }
+  for( Sprite f : floors) {
+    if (pressed("UP") && player.touchingSprite(f)) {
+      grav = -14.0;
+    }
+  }
+  
+  if (grav != 0) {
+    player.turn(6);
+  }
+  if (enemies.size() == 0 && floors.size() == 0) {
+    stage = 3; // set stage to: 3
+  }
+}
+
