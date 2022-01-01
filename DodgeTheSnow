@@ -1,0 +1,157 @@
+
+ArrayList<Sprite> rain = (new ArrayList());
+Sprite player = new Sprite(200, 770, 12, 50);
+Integer gameStage = 1;
+Integer hp = 100;
+Sprite reset = new Sprite(200, 490, 100, 50);
+ArrayList<Sprite> acid = (new ArrayList());
+Integer speed = 3;
+
+
+
+void draw() {
+  if (gameStage == 1) {
+    game();
+  } else if (gameStage == 2) {
+    endGame();
+  }
+}
+
+
+void collisionControls() {
+  for( Sprite r : rain) {
+    if (r.touchingSprite(player)) {
+      fill(255, 255, 255);
+      text("you've been hit", 200, 400);
+      hp = hp-1;
+    }
+  }
+  
+  for( Sprite a : acid) {
+    if (a.touchingSprite(player)) {
+      fill(255, 255, 255);
+      text("you've been hit with ACID RAIN", 200, 400);
+      hp = hp-5;
+    }
+  }
+  
+}
+
+
+void rainControls() {
+  for( Sprite r : rain) {
+    r.display();
+    r.moveY(speed);
+    if (frameCount%4 == 0) {
+      r.moveX((random(-3, 3)));
+    }
+    if (r.getY() > 800) {
+      r.setY(0);
+      r.setX((random(0, 400)));
+    }
+  }
+  
+  for( Sprite a : acid) {
+    a.display();
+    a.moveY(speed+3);
+    if (frameCount%4 == 0) {
+      a.moveX((random(-3, 3)));
+    }
+    if (a.getY() > 800) {
+      acid.remove(a);
+    }
+  }
+  
+  if (frameCount%600 == 0) {
+    speed = speed+1;
+  }
+  addRain();
+}
+
+
+void playerControls() {
+  player.display();
+  if (pressed("RIGHT")) {
+    player.moveX(4);
+  }
+  if (pressed("LEFT")) {
+    player.moveX(-4);
+  }
+  if (player.getX() < -6) {
+    player.setX(406);
+  }
+  if (player.getX() > 406) {
+    player.setX(-6);
+  }
+}
+
+void setup() {
+  size(400, 800);
+  while((rain.size() < 20)) {
+    Sprite s = new Sprite((random(0, 400)), (random(0, 800)), 5, 5);
+    s.setColor(255, 255, 255);
+    rain.add(s);
+  }
+  
+  player.setColor(125, 60, 98);
+}
+
+
+void addRain() {
+  if (frameCount%150 == 0) {
+    Float chance = random(0, 1);
+    Sprite s = new Sprite((random(0, 400)), (random(150, 800)), 5, 5);
+    if (chance == 0.1) {
+      s.setColor(255, 255, 255);
+      rain.add(s);
+    } else {
+      s.setY(0);
+      s.setColor(255, 0, 0);
+      acid.add(s);
+    }
+  }
+}
+
+
+void endGame() {
+  background(0, 0, 0);
+  fill(255, 255, 255);
+  text("You were hit too many times", 200, 400);
+  reset.setColor(125, 125, 125);
+  reset.display();
+  text("reset", 200, 490);
+}
+
+
+void mousePressed() {
+  if (reset.touchingPoint(mouseX, mouseY)) {
+    gameStage = 1;
+    hp = 100;
+    speed = 3;
+    acid.clear();
+  }
+}
+
+
+void game() {
+  noStroke();
+  fill(60, 114, 125, 120);
+  rect(200, 400, 400, 800);
+  
+  
+  playerControls();
+  rainControls();
+  collisionControls();
+  hpControls();
+}
+
+
+void hpControls() {
+  fill(153, 28, 63);
+  rect(15, 60, 12, hp);
+  
+  
+  if (hp < 0) {
+    gameStage = 2;
+  }
+}
