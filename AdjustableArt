@@ -1,0 +1,72 @@
+Sprite star = new Sprite(400, 400, 50, 50);
+Sprite slider = new Sprite(210, 25, 40, 40);
+float h = 0;
+float o = 20;
+boolean move = true;
+boolean pressedSlider = false;
+
+void setup(){
+    size(800, 800);
+    star.turnToDir(random(0, 360));
+    slider.setColor(255,255, 255);
+    background(0);
+}
+
+void draw(){
+    colorMode(HSB);
+    if(move == true){
+        star.forward(40);
+    }
+    noStroke();
+    fill(h, 255, 255, o);
+    ellipse(star.getX(), star.getY(), 50, 50);
+    if(star.getX() < 0 || star.getX() > 800){
+        star.flipX();
+    }
+    if(star.getY() < 0 || star.getY() > 800){
+        star.flipY();
+    }
+    h = (h + 0.5)%255;
+    if(star.getDir() == 180){
+        star.turnToDir(random(0, 360));
+    }
+    fill(0);
+    rect(0, 0, 420, 50);
+    fill(150);
+    rect(10, 15, 400, 20);
+    slider.display();
+    if(pressedSlider == true){
+        slider.setX(mouseX);
+    }
+    if(slider.getX() > 380){
+        slider.setX(380);
+    }
+    if(slider.getX() < 40){
+        slider.setX(40);
+    }
+    o = slider.getX()/2;
+}
+
+void keyPressed(){
+    if(key == ' '){
+        star.turnToDir(random(0, 360));
+    }
+    if(key == 'r'){
+        background(0);
+        star.moveToPoint(400, 400);
+        star.turnToDir(random(0, 360));
+    }
+    if(key == 'm'){
+        move = !move;
+    }
+}
+
+void mousePressed(){
+    if(slider.touchingPoint(mouseX, mouseY)){
+        pressedSlider = true;
+    }
+}
+
+void mouseReleased(){
+    pressedSlider = false;
+}
