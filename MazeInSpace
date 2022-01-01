@@ -1,0 +1,116 @@
+// this project was kind of a fail in terms of diffuculty
+
+FWorld world;
+FCircle marble;
+float xgrav = 0;
+float ygrav = 0;
+boolean up, down, left, right;
+
+void setup(){
+    size(600, 600);
+    Fisica.init(this);
+    world = new FWorld();
+    world.setEdges();
+    marble = new FCircle(40);
+    marble.setPosition(50, 50);
+    marble.setDensity(5);
+    marble.setRestitution(0.5);
+    marble.setFillColor(color(150));
+    marble.setNoStroke();
+    marble.setGrabbable(false);
+    marble.setAllowSleeping(false);
+    marble.setDamping(0.2);
+    world.add(marble);
+    makeWall(100, 80, 200, 20);
+    makeWall(300, 200, 20, 400);
+    makeWall(200, 250, 200, 20);
+    makeWall(60, 350, 120, 20);
+    makeWall(250, 475, 500, 20);
+    makeWall(490, 275, 20, 400);
+    makeWall(630, 80, 290, 20);
+    makeHole(170, 140);
+    makeHole(250, 300);
+    makeHole(60, 415);
+    makeHole(440, 350);
+    makeHole(350, 230);
+    makeHole(440, 110);
+}
+
+void makeWall(float x, float y, float w, float h){
+    FBox wall = new FBox(w, h);
+    wall.setPosition(x, y);
+    wall.setStatic(true);
+    wall.setNoStroke();
+    wall.setFillColor(color(100, 100, 100));
+    wall.setGrabbable(false);
+    world.add(wall);
+}
+
+void makeHole(float x, float y){
+    FCircle hole = new FCircle(50);
+    hole.setPosition(x, y);
+    hole.setStatic(true);
+    hole.setNoStroke();
+    hole.setGrabbable(false);
+    hole.setSensor(true);
+    hole.setFillColor(color(0, 0, 0));
+    world.add(hole);
+}
+
+void draw(){
+    background(50);
+    world.draw();
+    world.step();
+    world.setGravity(xgrav, ygrav);
+    if(up){
+        ygrav-=10;
+    }
+    if(down){
+        ygrav+=10;
+    }
+    if(left){
+        xgrav-=10;
+    }
+    if(right){
+        xgrav+=10;
+    }
+    ygrav = constrain(ygrav, -100, 100);
+    xgrav = constrain(xgrav, -100, 100);
+    ArrayList<FBody> touching = marble.getTouching();
+    for(FBody f : touching){
+        if(f.isSensor()){
+            marble.setPosition(50, 50);
+        }
+    }
+}
+
+void keyPressed(){
+    if(keyCode == UP){
+        up = true;
+    }
+    if(keyCode == DOWN){
+        down = true;
+    }
+    if(keyCode == RIGHT){
+        right = true;
+    }
+    if(keyCode == LEFT){
+        left = true;
+    }
+}
+
+
+void keyReleased(){
+    if(keyCode == UP){
+        up = false;
+    }
+    if(keyCode == DOWN){
+        down = false;
+    }
+    if(keyCode == RIGHT){
+        right = false;
+    }
+    if(keyCode == LEFT){
+        left = false;
+    }
+}
